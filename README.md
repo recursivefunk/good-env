@@ -11,6 +11,7 @@ With normal process.env
 $ export FOO=10
 $ export A_TRUE_VAL=true
 $ export A_FALSE_VAL=false
+$ export LIST=foo,bar,bang
 $ node
 > process.env.FOO
 '10'
@@ -18,6 +19,8 @@ $ node
 'true'
 > process.env.A_FALSE_VAL
 'false'
+> process.env.LIST
+'foo,bar,bang'
 >
 ```
 
@@ -34,18 +37,16 @@ false
 
 Specify defaults
 ```
-> env.get('NOT_HERE', 'foo')
+> env.get('NOT_SET', 'foo')
 'foo'
 >
 ```
 
-Even lists
+Lists
 ```
-$ export LIST=foo,bar,bang
-$ node
-> env = require('good-env')
 > env.getList('LIST')
 ['foo', 'bar']
+>
 ```
 
 Sometimes you just need to know if something exists
@@ -54,4 +55,5 @@ Sometimes you just need to know if something exists
 false
 > env.ok('FOO')
 true
+>
 ```
