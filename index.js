@@ -1,6 +1,8 @@
 
 const is = require('is_js')
 const component = require('stampit')
+const ok = is.existy
+const cache = {}
 
 const Env = component()
 
@@ -8,31 +10,52 @@ const Env = component()
     get(key, defaultVal) {
       let value = process.env[key]
 
-      if (!value && typeof defaultVal !== 'undefined') {
+      if (!ok(value) && typeof ok(defaultVal)) {
         value = defaultVal
       }
+
       return value
     },
 
     getInt(key, defaultVal) {
-      let value = this.get(key, defaultVal)
-      const intVal = parseInt(value, 10)
-      const valIsInt = is.integer(intVal)
+      let value
+      let intVal
+      let valIsInt
+
+      if (ok(cache[key])) {
+        return cache[key]
+      }
+
+      value = this.get(key, defaultVal)
+      intVal = parseInt(value, 10)
+      valIsInt = is.integer(intVal)
 
       if (value === defaultVal) {
+        cache[key] = value
         return value
       } else if (valIsInt) {
+        cache[key] = intVal
         return intVal
       }
     },
 
     getList(key, defaultVal, opts = {}) {
-      let value = this.get(key, defaultVal)
-      if (value) {
+      let value
+
+      if (ok(key[cache])) {
+        return cache[key]
+      }
+
+      value = this.get(key, defaultVal)
+
+      if (ok(value)) {
         if (!is.array(value)) {
           const dilim = opts.dilim || ','
-          return value.split(dilim)
+          const ret = value.split(dilim)
+          cache[key] = ret
+          return ret
         } else {
+          cache[key] = value
           return value
         }
       }
