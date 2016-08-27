@@ -1,0 +1,31 @@
+
+{
+  "asi": true,
+  "bitwise": true,
+  "browser": true,
+  "camelcase": true,
+  "esversion": 6,
+  "curly": true,
+  "forin": true,
+  "immed": true,
+  "latedef": "nofunc",
+  "maxlen": 80,
+  "newcap": false,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "globals": [
+    "module",
+    "exports",
+    "require",
+    "process",
+    "console",
+    "jQuery",
+    "$"
+  ],
+  "node": true,
+  "quotmark": "single",
+  "trailing": true,
+  "undef": true,
+  "unused": true
+}

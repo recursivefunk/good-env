@@ -1,0 +1,23 @@
+{
+  "name": "good-env",
+  "version": "1.0.0",
+  "description": "Sensible environment variable parsing for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "environment",
+    "environment-variables"
+  ],
+  "author": "Johnny Ray Austin <johnny@johnnyray.me>",
+  "license": "MIT",
+  "dependencies": {
+    "is_js": "^0.8.0",
+    "stampit": "^2.1.2"
+  },
+  "devDependencies": {
+    "dotenv": "^2.0.0",
+    "tape": "^4.6.0"
+  }
+}
