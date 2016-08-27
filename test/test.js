@@ -34,3 +34,16 @@ test('returns undefined for existing non-number', (t) => {
   t.end()
 })
 
+test('returns a list of values', (t) => {
+  const result = env.getList('MY_LIST')
+  t.equal(result.length, 3)
+  t.equal(result[0], 'foo')
+  t.end()
+})
+
+test('returns a default list of values', (t) => {
+  const result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
+  t.equal(result.length, 2)
+  t.equal(result[0], 'beep')
+  t.end()
+})

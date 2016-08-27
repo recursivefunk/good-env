@@ -24,9 +24,19 @@ const Env = component()
       } else if (valIsInt) {
         return intVal
       }
+    },
 
+    getList(key, defaultVal, opts = {}) {
+      let value = this.get(key, defaultVal)
+      if (value) {
+        if (!is.array(value)) {
+          const dilim = opts.dilim || ','
+          return value.split(dilim)
+        } else {
+          return value
+        }
+      }
     }
-
   })
 
 module.exports = Env.create()

@@ -29,3 +29,12 @@ Specify defaults
 'foo'
 >
 ```
+
+Even lists
+```
+$ export LIST=foo,bar,bang
+$ node
+> env = require('good-env')
+> env.getList('LIST')
+['foo', 'bar']
+```
