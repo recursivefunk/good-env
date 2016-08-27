@@ -17,6 +17,34 @@ const Env = component()
       return value
     },
 
+    ok(key) {
+      return ok(process.env[key])
+    },
+
+    getBool(key) {
+      let value
+
+      if (ok(cache[key])) {
+        return cache[key]
+      }
+
+      value = process.env[key]
+
+      if (ok(value)) {
+        let ret
+        value = value.toLowerCase().trim()
+        if (value === 'true') {
+          ret = true
+        } else if (value === 'false') {
+          ret = false
+        }
+        cache[key] = ret
+        return ret
+      }
+
+      return false
+    },
+
     getInt(key, defaultVal) {
       let value
       let intVal

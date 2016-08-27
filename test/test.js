@@ -10,6 +10,14 @@ test('it fetches existing env', (t) => {
   t.end()
 })
 
+test('it checks existence', (t) => {
+  let result = env.ok('FOO')
+  t.equal(result, true)
+  result = env.ok('NOPE')
+  t.equal(result, false)
+  t.end()
+})
+
 test('it returns default val for non-existing env', (t) => {
   const result = env.get('BANG', 'boop')
   t.equal(result, 'boop')
@@ -45,5 +53,21 @@ test('returns a default list of values', (t) => {
   const result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
   t.equal(result.length, 2)
   t.equal(result[0], 'beep')
+  t.end()
+})
+
+test('returns true for true', (t) => {
+  let result = env.getBool('MY_TRUE_KEY')
+  t.equal(result, true)
+  result = env.getBool('MY_UPPER_TRUE_KEY')
+  t.equal(result, true)
+  t.end()
+})
+
+test('returns false for false', (t) => {
+  let result = env.getBool('MY_FALSE_KEY')
+  t.equal(result, false)
+  result = env.getBool('MY_UPPER_FALSE_KEY')
+  t.equal(result, false)
   t.end()
 })
