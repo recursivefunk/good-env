@@ -21,7 +21,7 @@ $ node
 >
 ```
 
-Using 'good-env'
+Using `good-env`
 ```
 > const env = require('good-env')
 > env.getInt('FOO')
