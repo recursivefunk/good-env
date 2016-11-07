@@ -71,3 +71,16 @@ test('returns false for false', (t) => {
   t.equal(result, false)
   t.end()
 })
+
+test('parses values with leading whitespace', (t) => {
+  let result = env.get('LEADING_WHITESPACE')
+  t.equal(result, 'val')
+  t.end()
+})
+
+test('parses values with trailing whitespace', (t) => {
+  let result = env.get('TRAILING_WHITESPACE')
+  t.equal(result, 'val')
+  t.end()
+})
+
