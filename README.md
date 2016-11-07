@@ -45,7 +45,7 @@ Specify defaults
 Lists
 ```
 > env.getList('LIST')
-['foo', 'bar']
+['foo', 'bar', 'bang']
 >
 ```
 
