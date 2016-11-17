@@ -77,19 +77,24 @@ const Env = component()
       return this.getInt(key, defaultVal)
     },
 
-    getList(key, defaultVal, opts = {}) {
+    getList(key, opts = {}) {
       let value
 
       if (ok(key[cache])) {
         return cache[key]
       }
 
-      value = this.get(key, defaultVal)
+      value = this.get(key, [])
 
       if (ok(value)) {
         if (!is.array(value)) {
           const dilim = opts.dilim || ','
-          const ret = value.split(dilim).map(i => i.trim())
+          let ret = value.split(dilim).map(i => i.trim())
+          if (opts.cast === 'int') {
+            ret = mapInts(ret)
+          } else if (opts.cast === 'float') {
+            ret = mapFloats(ret)
+          }
           cache[key] = ret
           return ret
         } else {
@@ -97,12 +102,21 @@ const Env = component()
           return value
         }
       }
+
+      return []
     },
 
-    list(key, defaultVal, opts = {}) {
-      return this.getList(key, defaultVal, opts)
+    list(key, opts = {}) {
+      return this.getList(key, opts)
     }
   })
 
 module.exports = Env.create()
 
+function mapFloats(items) {
+  return items.map((t) => parseFloat(t, 10))
+}
+
+function mapInts(items) {
+  return items.map((t) => parseInt(t, 10))
+}

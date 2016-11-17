@@ -46,7 +46,28 @@ Lists
 ```
 > env.getList('LIST')
 ['foo', 'bar', 'bang']
->
+
+> env.getList('LIST_NOT_SET')
+[]
+```
+
+Integer Lists
+```
+> export LIST=1,2,3
+> process.env.LIST
+'1,2,3'
+
+> env.list('LIST', { cast: 'int' })
+[1, 2, 3]
+```
+
+Float Lists
+```
+> export LIST=1.3,2.5,3.6
+'1.3,2.5,3.6'
+
+env.list('LIST', { cast: 'float' })
+[1.3, 2.2, 3.6]
 ```
 
 Sometimes you just need to know if something exists

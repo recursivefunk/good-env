@@ -1,6 +1,6 @@
 {
   "name": "good-env",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Sensible environment variable parsing for node",
   "main": "index.js",
   "scripts": {

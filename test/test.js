@@ -52,6 +52,13 @@ test('returns a list of values', (t) => {
   t.end()
 })
 
+test('returns empty list for non-existy', (t) => {
+  let result = env.getList('MY_LIST_NOT_HERE')
+  t.equal(result.length, 0)
+  t.end()
+})
+
+/*
 test('returns a default list of values', (t) => {
   let result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
   t.equal(result.length, 2)
@@ -61,6 +68,18 @@ test('returns a default list of values', (t) => {
   result = env.list('MY_LIST_NOT_HERE', ['beep', 'boop'])
   t.equal(result.length, 2)
   t.equal(result[0], 'beep')
+  t.end()
+})
+*/
+test('parses int list', (t) => {
+  let result = env.getList('MY_INT_LIST', { cast: 'int' })
+  result.forEach((i) => t.equal(isInt(i), true))
+  t.end()
+})
+
+test('parses float list', (t) => {
+  let result = env.getList('MY_FLOAT_LIST', { cast: 'float' })
+  result.forEach((i) => t.equal(isFloat(i), true))
   t.end()
 })
 
@@ -96,3 +115,11 @@ test('parses values with trailing whitespace', (t) => {
   t.end()
 })
 
+
+function isInt(i) {
+  return Number(i) === i && i % 1 === 0
+}
+
+function isFloat(i) {
+  return Number(i) === i && i % 1 !== 0
+}
