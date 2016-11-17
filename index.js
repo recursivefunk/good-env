@@ -47,6 +47,10 @@ const Env = component()
       return false
     },
 
+    bool(key) {
+      return this.getBool(key)
+    },
+
     getInt(key, defaultVal) {
       let value
       let intVal
@@ -69,6 +73,10 @@ const Env = component()
       }
     },
 
+    int(key, defaultVal) {
+      return this.getInt(key, defaultVal)
+    },
+
     getList(key, defaultVal, opts = {}) {
       let value
 
@@ -89,6 +97,10 @@ const Env = component()
           return value
         }
       }
+    },
+
+    list(key, defaultVal, opts = {}) {
+      return this.getList(key, defaultVal, opts)
     }
   })
 

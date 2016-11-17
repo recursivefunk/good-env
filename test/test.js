@@ -25,7 +25,10 @@ test('it returns default val for non-existing env', (t) => {
 })
 
 test('returns integers', (t) => {
-  const result = env.getInt('INT_NUM')
+  let result = env.getInt('INT_NUM')
+  t.equal(result, 10)
+  result = null
+  result = env.int('INT_NUM')
   t.equal(result, 10)
   t.end()
 })
@@ -50,7 +53,12 @@ test('returns a list of values', (t) => {
 })
 
 test('returns a default list of values', (t) => {
-  const result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
+  let result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
+  t.equal(result.length, 2)
+  t.equal(result[0], 'beep')
+  result = null
+  // Test shortcut version
+  result = env.list('MY_LIST_NOT_HERE', ['beep', 'boop'])
   t.equal(result.length, 2)
   t.equal(result[0], 'beep')
   t.end()
@@ -60,6 +68,10 @@ test('returns true for true', (t) => {
   let result = env.getBool('MY_TRUE_KEY')
   t.equal(result, true)
   result = env.getBool('MY_UPPER_TRUE_KEY')
+  t.equal(result, true)
+  result = null
+  // Test shortcut version
+  result = env.bool('MY_UPPER_TRUE_KEY')
   t.equal(result, true)
   t.end()
 })

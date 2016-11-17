@@ -57,3 +57,11 @@ false
 true
 >
 ```
+
+## Shortcut Methods
+
+```javascript
+env.int() ==> env.getInt()
+env.bool() ==> env.getBool()
+env.list() ==> env.getList()
+```
