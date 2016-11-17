@@ -14,6 +14,8 @@ const Env = component()
         value = defaultVal
       }
 
+      value = (is.string(value)) ? value.trim() : value
+
       return value
     },
 
@@ -79,7 +81,7 @@ const Env = component()
       if (ok(value)) {
         if (!is.array(value)) {
           const dilim = opts.dilim || ','
-          const ret = value.split(dilim)
+          const ret = value.split(dilim).map(i => i.trim())
           cache[key] = ret
           return ret
         } else {
