@@ -7,6 +7,13 @@ const cache = {}
 const Env = component()
 
   .methods({
+
+    /**
+     * @description Fetches the env var with the given key. If no env var
+     * with the specified key exists, the default value is returned if it is
+     * provided else it returns undefined
+     *
+     */
     get(key, defaultVal) {
       let value = process.env[key]
 
@@ -19,10 +26,20 @@ const Env = component()
       return value
     },
 
+    /**
+     * @description Determines whether or not the value at the given key is
+     * truthy
+     *
+     */
     ok(key) {
       return ok(process.env[key])
     },
 
+    /**
+     * @description Fetches the value at the given key and attempts to
+     * coherse it into a boolean
+     *
+     */
     getBool(key) {
       let value
 
@@ -47,10 +64,19 @@ const Env = component()
       return false
     },
 
+    /**
+     * @description An alias function for getBool()
+     *
+     */
     bool(key) {
       return this.getBool(key)
     },
 
+    /**
+     * @description Fetches the value at the given key and attempts to
+     * coherse it into an integer
+     *
+     */
     getInt(key, defaultVal) {
       let value
       let intVal
@@ -73,10 +99,19 @@ const Env = component()
       }
     },
 
+    /**
+     * @description An alias function for getInt()
+     *
+     */
     int(key, defaultVal) {
       return this.getInt(key, defaultVal)
     },
 
+    /**
+     * @description Fetches the value at the given key and attempts to
+     * coherse it into a list of literal values
+     *
+     */
     getList(key, opts = {}) {
       let value
 
@@ -106,6 +141,10 @@ const Env = component()
       return []
     },
 
+    /**
+     * @description An alias function for getList()
+     *
+     */
     list(key, opts = {}) {
       return this.getList(key, opts)
     }

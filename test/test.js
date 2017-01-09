@@ -1,118 +1,103 @@
 
 require('dotenv').config({ path: 'test/test.env' })
 
-const test = require('tape')
+const test = require('ava')
 const env = require('../index')
 
 test('it fetches existing env', (t) => {
   const result = env.get('FOO')
-  t.equal(result, 'bar')
-  t.end()
+  t.is(result, 'bar')
 })
 
 test('it checks existence', (t) => {
   let result = env.ok('FOO')
-  t.equal(result, true)
+  t.is(result, true)
   result = env.ok('NOPE')
-  t.equal(result, false)
-  t.end()
+  t.is(result, false)
 })
 
 test('it returns default val for non-existing env', (t) => {
   const result = env.get('BANG', 'boop')
-  t.equal(result, 'boop')
-  t.end()
+  t.is(result, 'boop')
 })
 
 test('returns integers', (t) => {
   let result = env.getInt('INT_NUM')
-  t.equal(result, 10)
+  t.is(result, 10)
   result = null
   result = env.int('INT_NUM')
-  t.equal(result, 10)
-  t.end()
+  t.is(result, 10)
 })
 
 test('returns undefined for non-existing number', (t) => {
   const result = env.getInt('INT_NOT_HERE')
-  t.equal(undefined, result)
-  t.end()
+  t.is(undefined, result)
 })
 
 test('returns undefined for existing non-number', (t) => {
   const result = env.getInt('FOO')
-  t.equal(undefined, result)
-  t.end()
+  t.is(undefined, result)
 })
 
 test('returns a list of values', (t) => {
   const result = env.getList('MY_LIST')
-  t.equal(result.length, 3)
-  t.equal(result[0], 'foo')
-  t.end()
+  t.is(result.length, 3)
+  t.is(result[0], 'foo')
 })
 
 test('returns empty list for non-existy', (t) => {
   let result = env.getList('MY_LIST_NOT_HERE')
-  t.equal(result.length, 0)
-  t.end()
+  t.is(result.length, 0)
 })
 
 /*
 test('returns a default list of values', (t) => {
   let result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
-  t.equal(result.length, 2)
-  t.equal(result[0], 'beep')
+  t.is(result.length, 2)
+  t.is(result[0], 'beep')
   result = null
   // Test shortcut version
   result = env.list('MY_LIST_NOT_HERE', ['beep', 'boop'])
-  t.equal(result.length, 2)
-  t.equal(result[0], 'beep')
-  t.end()
+  t.is(result.length, 2)
+  t.is(result[0], 'beep')
 })
 */
 test('parses int list', (t) => {
   let result = env.getList('MY_INT_LIST', { cast: 'int' })
-  result.forEach((i) => t.equal(isInt(i), true))
-  t.end()
+  result.forEach((i) => t.is(isInt(i), true))
 })
 
 test('parses float list', (t) => {
   let result = env.getList('MY_FLOAT_LIST', { cast: 'float' })
-  result.forEach((i) => t.equal(isFloat(i), true))
-  t.end()
+  result.forEach((i) => t.is(isFloat(i), true))
 })
 
 test('returns true for true', (t) => {
   let result = env.getBool('MY_TRUE_KEY')
-  t.equal(result, true)
+  t.is(result, true)
   result = env.getBool('MY_UPPER_TRUE_KEY')
-  t.equal(result, true)
+  t.is(result, true)
   result = null
   // Test shortcut version
   result = env.bool('MY_UPPER_TRUE_KEY')
-  t.equal(result, true)
-  t.end()
+  t.is(result, true)
 })
 
 test('returns false for false', (t) => {
   let result = env.getBool('MY_FALSE_KEY')
-  t.equal(result, false)
+  t.is(result, false)
   result = env.getBool('MY_UPPER_FALSE_KEY')
-  t.equal(result, false)
-  t.end()
+  t.is(result, false)
 })
 
 test('parses values with leading whitespace', (t) => {
   let result = env.get('LEADING_WHITESPACE')
-  t.equal(result, 'val')
-  t.end()
+  t.is(result, 'val')
 })
 
 test('parses values with trailing whitespace', (t) => {
   let result = env.get('TRAILING_WHITESPACE')
-  t.equal(result, 'val')
-  t.end()
+  t.is(result, 'val')
 })
 
 
