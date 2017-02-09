@@ -11,6 +11,8 @@ Thumbs.db
 .env
 test.env
 node_modules/
+.nyc_output/
+coverage/
 
 # Files that might appear on external disks
 .Spotlight-V100

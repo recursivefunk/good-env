@@ -115,30 +115,27 @@ const Env = component()
     getList(key, opts = {}) {
       let value
 
-      if (ok(key[cache])) {
+      if (ok(cache[key])) {
         return cache[key]
       }
 
       value = this.get(key, [])
 
-      if (ok(value)) {
-        if (!is.array(value)) {
-          const dilim = opts.dilim || ','
-          let ret = value.split(dilim).map(i => i.trim())
-          if (opts.cast === 'int') {
-            ret = mapInts(ret)
-          } else if (opts.cast === 'float') {
-            ret = mapFloats(ret)
-          }
-          cache[key] = ret
-          return ret
-        } else {
-          cache[key] = value
-          return value
+      if (!is.array(value)) {
+        const dilim = opts.dilim || ','
+        let ret = value.split(dilim).map(i => i.trim())
+        if (opts.cast === 'int') {
+          ret = mapInts(ret)
+        } else if (opts.cast === 'float') {
+          ret = mapFloats(ret)
         }
+        cache[key] = ret
+        return ret
+      } else {
+        cache[key] = value
+        return value
       }
 
-      return []
     },
 
     /**

@@ -4,7 +4,7 @@
   "description": "Sensible environment variable parsing for node",
   "main": "index.js",
   "scripts": {
-    "test": "ava test/test.js"
+    "test": "nyc --check-coverage --lines 100 ava"
   },
   "keywords": [
     "environment",
@@ -22,9 +22,9 @@
   "devDependencies": {
     "ava": "^0.17.0",
     "dotenv": "^2.0.0",
-    "tape": "^4.6.0"
+    "nyc": "^10.1.2"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=4"
   }
 }

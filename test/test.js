@@ -40,7 +40,11 @@ test('returns undefined for existing non-number', (t) => {
 })
 
 test('returns a list of values', (t) => {
-  const result = env.getList('MY_LIST')
+  let result = env.getList('MY_LIST')
+  t.is(result.length, 3)
+  t.is(result[0], 'foo')
+  // Again to hit the cache
+  result = env.list('MY_LIST')
   t.is(result.length, 3)
   t.is(result[0], 'foo')
 })
