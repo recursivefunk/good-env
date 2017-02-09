@@ -54,18 +54,6 @@ test('returns empty list for non-existy', (t) => {
   t.is(result.length, 0)
 })
 
-/*
-test('returns a default list of values', (t) => {
-  let result = env.getList('MY_LIST_NOT_HERE', ['beep', 'boop'])
-  t.is(result.length, 2)
-  t.is(result[0], 'beep')
-  result = null
-  // Test shortcut version
-  result = env.list('MY_LIST_NOT_HERE', ['beep', 'boop'])
-  t.is(result.length, 2)
-  t.is(result[0], 'beep')
-})
-*/
 test('parses int list', (t) => {
   let result = env.getList('MY_INT_LIST', { cast: 'int' })
   result.forEach((i) => t.is(isInt(i), true))
