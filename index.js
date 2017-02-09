@@ -1,3 +1,4 @@
+'use strict'
 
 const is = require('is_js')
 const component = require('stampit')
@@ -156,3 +157,5 @@ function mapFloats(items) {
 function mapInts(items) {
   return items.map((t) => parseInt(t, 10))
 }
+
+[![Circle CI](https://circleci.com/gh/recursivefunk/good-env.png?circle-token=b1d0d5b046161f60cc5816afb82b741db7163344)(https://circleci.com/gh/recursivefunk/good-env)
