@@ -113,7 +113,8 @@ const Env = component()
      * coherse it into a list of literal values
      *
      */
-    getList(key, opts = {}) {
+    getList(key, opts) {
+    opts = opts || {}
       let value
 
       if (ok(cache[key])) {
@@ -143,7 +144,8 @@ const Env = component()
      * @description An alias function for getList()
      *
      */
-    list(key, opts = {}) {
+    list(key, opts) {
+			opts = opts || {}
       return this.getList(key, opts)
     }
   })
@@ -157,5 +159,3 @@ function mapFloats(items) {
 function mapInts(items) {
   return items.map((t) => parseInt(t, 10))
 }
-
-[![Circle CI](https://circleci.com/gh/recursivefunk/good-env.png?circle-token=b1d0d5b046161f60cc5816afb82b741db7163344)(https://circleci.com/gh/recursivefunk/good-env)
