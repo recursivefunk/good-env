@@ -15,8 +15,24 @@ const Env = component()
      * provided else it returns undefined
      *
      */
-    get(key, defaultVal) {
-      let value = process.env[key]
+    get(keyObj, defaultVal) {
+      let keys
+      let value
+
+      if (is.string(keyObj)) {
+        keys = [keyObj]
+      } else if (is.array(keyObj)){
+        keys = keyObj.map(k => k.trim())
+      } else {
+        throw new Error(`Invalid key(s) ${keyObj}`)
+      }
+
+      keys.some((key) => {
+        if (ok(process.env[key])) {
+          value = process.env[key]
+          return true
+        }
+      })
 
       if (!ok(value) && typeof ok(defaultVal)) {
         value = defaultVal

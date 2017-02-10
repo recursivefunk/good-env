@@ -44,6 +44,18 @@ Specify defaults
 >
 ```
 
+Use the first available environment variable
+```
+// old and busted
+const foo = process.env.FOO || process.env.BANG
+
+// new hotness
+const foo = env.get(['FOO', 'BAR'])
+
+// works with defaults
+const foo = env.get(['FOO', 'BAR'], 5)
+```
+
 Lists
 ```
 > env.getList('LIST')

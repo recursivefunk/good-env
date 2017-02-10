@@ -17,9 +17,37 @@ test('it checks existence', (t) => {
   t.is(result, false)
 })
 
+
 test('it returns default val for non-existing env', (t) => {
   const result = env.get('BANG', 'boop')
   t.is(result, 'boop')
+})
+
+test('it tries multiple keys in order', (t) => {
+  let result = env.get('BOOZ')
+  // ensure first that BOOZ is not an environment variable
+  t.falsy(result)
+  // ensure we recognize the last item in the array as the existing env var
+  result = env.get(['BOOZ', 'FOO'])
+  t.is(result, 'bar')
+  result = null
+  // ensure we recognize the first item in the array as the existing env var
+  result = env.get(['FOO', 'BOOZ'])
+  t.is(result, 'bar')
+  result = null
+  // ensure we recognize a middle item in the array as the existing env var
+  result = env.get(['BOOZ', 'FOO', 'ZAP'])
+  t.is(result, 'bar')
+  result = null
+  result = env.get(['BOOZ', 'ZOOP'])
+  // ensure a falsy result for no existing env vars
+  t.falsy(result)
+})
+
+test('it breaks for invalid keys', (t) => {
+  const error = t.throws(() => {
+    env.get({ foo: 'bar' })
+  }, 'Invalid key(s) [object Object]')
 })
 
 test('returns integers', (t) => {
@@ -27,6 +55,9 @@ test('returns integers', (t) => {
   t.is(result, 10)
   result = null
   result = env.int('INT_NUM')
+  t.is(result, 10)
+  result = null
+  result = env.int(['INTT', 'INT_NUM'])
   t.is(result, 10)
 })
 
