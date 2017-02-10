@@ -10,6 +10,7 @@ $ npm install good-env --save
 With normal process.env
 
 ```
+$ export HOST=localhost
 $ export FOO=10
 $ export A_TRUE_VAL=true
 $ export A_FALSE_VAL=false
@@ -47,13 +48,16 @@ Specify defaults
 Use the first available environment variable
 ```
 // old and busted
-const foo = process.env.FOO || process.env.BANG
+> const host = process.env.THE_HOST || process.env.HOST
+'localhost'
 
 // new hotness
-const foo = env.get(['FOO', 'BAR'])
+> const host = env.get(['THE_HOST', 'HOST'])
+'localhost'
 
 // works with defaults
-const foo = env.get(['FOO', 'BAR'], 5)
+> const host = env.get(['THE_HOST', 'A_HOST'], 'localhost')
+'localhost'
 ```
 
 Lists
