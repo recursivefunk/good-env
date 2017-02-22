@@ -57,7 +57,7 @@ const Env = component()
      * coherse it into a boolean
      *
      */
-    getBool(key) {
+    getBool(key, defaultVal) {
       let value
 
       if (ok(cache[key])) {
@@ -77,6 +77,9 @@ const Env = component()
         cache[key] = ret
         return ret
       }
+      else if (defaultVal === true || defaultVal === false) {
+        return defaultVal
+      }
 
       return false
     },
@@ -85,8 +88,8 @@ const Env = component()
      * @description An alias function for getBool()
      *
      */
-    bool(key) {
-      return this.getBool(key)
+    bool(key, defaultVal) {
+      return this.getBool(key, defaultVal)
     },
 
     /**

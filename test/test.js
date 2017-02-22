@@ -114,6 +114,15 @@ test('returns false for false', (t) => {
   t.is(result, false)
 })
 
+test('returns default bool:true', (t) => {
+  let result = env.getBool('BOOL_NOT_SET', true)
+  t.is(result, true);
+  result = env.getBool('BOOL_NOT_SET', false)
+  t.is(result, false)
+  result = env.getBool('BOOL_NOT_SET')
+  t.is(result, false)
+})
+
 test('parses values with leading whitespace', (t) => {
   let result = env.get('LEADING_WHITESPACE')
   t.is(result, 'val')
