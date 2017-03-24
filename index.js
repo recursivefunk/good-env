@@ -60,10 +60,6 @@ const Env = component()
     getBool(key, defaultVal) {
       let value
 
-      if (ok(cache[key])) {
-        return cache[key]
-      }
-
       value = process.env[key]
 
       if (ok(value)) {
@@ -74,10 +70,8 @@ const Env = component()
         } else if (value === 'false') {
           ret = false
         }
-        cache[key] = ret
         return ret
-      }
-      else if (defaultVal === true || defaultVal === false) {
+      } else if (defaultVal === true || defaultVal === false) {
         return defaultVal
       }
 
@@ -133,7 +127,7 @@ const Env = component()
      *
      */
     getList(key, opts) {
-    opts = opts || {}
+      opts = opts || {}
       let value
 
       if (ok(cache[key])) {
@@ -164,7 +158,7 @@ const Env = component()
      *
      */
     list(key, opts) {
-			opts = opts || {}
+      opts = opts || {}
       return this.getList(key, opts)
     }
   })

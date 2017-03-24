@@ -59,6 +59,9 @@ test('returns integers', (t) => {
   result = null
   result = env.int(['INTT', 'INT_NUM'])
   t.is(result, 10)
+  result = null
+  result = env.int(['INTT', 'INT_NUM', 'INNTT'])
+  t.is(result, 10)
 })
 
 test('returns undefined for non-existing number', (t) => {
