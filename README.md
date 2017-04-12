@@ -3,6 +3,8 @@
 
 [![Circle CI](https://circleci.com/gh/recursivefunk/good-env.png?circle-token=b1d0d5b046161f60cc5816afb82b741db7163344)](https://circleci.com/gh/recursivefunk/good-env)
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
+
 ```
 $ npm install good-env --save
 ```

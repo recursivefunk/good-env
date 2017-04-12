@@ -4,7 +4,8 @@
   "description": "Sensible environment variable parsing for node",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --lines 100 ava"
+    "test": "nyc --check-coverage --lines 100 ava",
+    "lint": "eslint test/ index.js"
   },
   "keywords": [
     "environment",
@@ -22,9 +23,15 @@
   "devDependencies": {
     "ava": "^0.17.0",
     "dotenv": "^2.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "nyc": "^10.1.2"
   },
   "engines": {
-    "node": ">=4.3.2"
+    "node": ">=4"
   }
 }
