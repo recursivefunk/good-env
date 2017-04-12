@@ -17,7 +17,6 @@ test('it checks existence', (t) => {
   t.is(result, false)
 })
 
-
 test('it returns default val for non-existing env', (t) => {
   const result = env.get('BANG', 'boop')
   t.is(result, 'boop')
@@ -45,7 +44,7 @@ test('it tries multiple keys in order', (t) => {
 })
 
 test('it breaks for invalid keys', (t) => {
-  const error = t.throws(() => {
+  t.throws(() => {
     env.get({ foo: 'bar' })
   }, 'Invalid key(s) [object Object]')
 })
@@ -119,7 +118,7 @@ test('returns false for false', (t) => {
 
 test('returns default bool:true', (t) => {
   let result = env.getBool('BOOL_NOT_SET', true)
-  t.is(result, true);
+  t.is(result, true)
   result = env.getBool('BOOL_NOT_SET', false)
   t.is(result, false)
   result = env.getBool('BOOL_NOT_SET')
@@ -136,11 +135,10 @@ test('parses values with trailing whitespace', (t) => {
   t.is(result, 'val')
 })
 
-
-function isInt(i) {
+function isInt (i) {
   return Number(i) === i && i % 1 === 0
 }
 
-function isFloat(i) {
+function isFloat (i) {
   return Number(i) === i && i % 1 !== 0
 }

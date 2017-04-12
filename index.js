@@ -6,22 +6,20 @@ const ok = is.existy
 const cache = {}
 
 const Env = component()
-
   .methods({
-
     /**
      * @description Fetches the env var with the given key. If no env var
      * with the specified key exists, the default value is returned if it is
      * provided else it returns undefined
      *
      */
-    get(keyObj, defaultVal) {
+    get (keyObj, defaultVal) {
       let keys
       let value
 
       if (is.string(keyObj)) {
         keys = [keyObj]
-      } else if (is.array(keyObj)){
+      } else if (is.array(keyObj)) {
         keys = keyObj.map(k => k.trim())
       } else {
         throw new Error(`Invalid key(s) ${keyObj}`)
@@ -48,7 +46,7 @@ const Env = component()
      * truthy
      *
      */
-    ok(key) {
+    ok (key) {
       return ok(process.env[key])
     },
 
@@ -57,7 +55,7 @@ const Env = component()
      * coherse it into a boolean
      *
      */
-    getBool(key, defaultVal) {
+    getBool (key, defaultVal) {
       let value
 
       value = process.env[key]
@@ -82,7 +80,7 @@ const Env = component()
      * @description An alias function for getBool()
      *
      */
-    bool(key, defaultVal) {
+    bool (key, defaultVal) {
       return this.getBool(key, defaultVal)
     },
 
@@ -91,7 +89,7 @@ const Env = component()
      * coherse it into an integer
      *
      */
-    getInt(key, defaultVal) {
+    getInt (key, defaultVal) {
       let value
       let intVal
       let valIsInt
@@ -117,7 +115,7 @@ const Env = component()
      * @description An alias function for getInt()
      *
      */
-    int(key, defaultVal) {
+    int (key, defaultVal) {
       return this.getInt(key, defaultVal)
     },
 
@@ -126,7 +124,7 @@ const Env = component()
      * coherse it into a list of literal values
      *
      */
-    getList(key, opts) {
+    getList (key, opts) {
       opts = opts || {}
       let value
 
@@ -150,14 +148,13 @@ const Env = component()
         cache[key] = value
         return value
       }
-
     },
 
     /**
      * @description An alias function for getList()
      *
      */
-    list(key, opts) {
+    list (key, opts) {
       opts = opts || {}
       return this.getList(key, opts)
     }
@@ -165,10 +162,10 @@ const Env = component()
 
 module.exports = Env.create()
 
-function mapFloats(items) {
+function mapFloats (items) {
   return items.map((t) => parseFloat(t, 10))
 }
 
-function mapInts(items) {
+function mapInts (items) {
   return items.map((t) => parseInt(t, 10))
 }
