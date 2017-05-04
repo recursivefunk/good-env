@@ -3,7 +3,6 @@
 const is = require('is_js')
 const component = require('stampit')
 const ok = is.existy
-const cache = {}
 
 const Env = component()
   .methods({
@@ -94,19 +93,13 @@ const Env = component()
       let intVal
       let valIsInt
 
-      if (ok(cache[key])) {
-        return cache[key]
-      }
-
       value = this.get(key, defaultVal)
       intVal = parseInt(value, 10)
       valIsInt = is.integer(intVal)
 
       if (value === defaultVal) {
-        cache[key] = value
         return value
       } else if (valIsInt) {
-        cache[key] = intVal
         return intVal
       }
     },
@@ -128,10 +121,6 @@ const Env = component()
       opts = opts || {}
       let value
 
-      if (ok(cache[key])) {
-        return cache[key]
-      }
-
       value = this.get(key, [])
 
       if (!is.array(value)) {
@@ -142,10 +131,8 @@ const Env = component()
         } else if (opts.cast === 'float') {
           ret = mapFloats(ret)
         }
-        cache[key] = ret
         return ret
       } else {
-        cache[key] = value
         return value
       }
     },
