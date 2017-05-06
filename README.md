@@ -13,6 +13,7 @@ With normal process.env
 
 ```
 $ export HOST=localhost
+$ export SECRET=shhh
 $ export FOO=10
 $ export A_TRUE_VAL=true
 $ export A_FALSE_VAL=false
@@ -30,72 +31,77 @@ $ node
 ```
 
 Using `good-env`
-```
-> const env = require('good-env')
-> env.getInt('FOO')
-10
-> env.getBool('A_TRUE_VAL')
-true
-> env.getBool('A_FALSE_VAL')
-false
+
+```javascript
+const env = require('good-env')
+env.getInt('FOO') // 10
+env.getBool('A_TRUE_VAL') // true
+env.getBool('A_FALSE_VAL') // false
 ```
 
 Specify defaults
+
+```javascript
+env.get('NOT_SET', 'foo') // 'foo'
 ```
-> env.get('NOT_SET', 'foo')
-'foo'
->
+
+Batch Gets
+
+```javascript
+env.getAll(['SECRET', 'HOST']) // ['shhh', 'localhost']
+// defaults work here too
+env.getAll({ 
+  A_SECRET: 'lolz', HOST: null // null means no default
+}) // { A_SECRET: 'lolz', HOST: 'localhost' }
 ```
 
 Use the first available environment variable
-```
+
+```javascript
 // old and busted
-> const host = process.env.THE_HOST || process.env.HOST
-'localhost'
+const host = process.env.THE_HOST || process.env.HOST // 'localhost'
 
 // new hotness
-> const host = env.get(['THE_HOST', 'HOST'])
-'localhost'
+const host = env.get(['THE_HOST', 'HOST']) // 'localhost'
 
 // works with defaults
-> const host = env.get(['THE_HOST', 'A_HOST'], 'localhost')
-'localhost'
+const host = env.get(['THE_HOST', 'A_HOST'], 'localhost') // 'localhost'
 ```
 
 Lists
-```
-> env.getList('LIST')
-['foo', 'bar', 'bang']
 
-> env.getList('LIST_NOT_SET')
-[]
+```javascript
+env.getList('LIST') // ['foo', 'bar', 'bang']
+env.getList('LIST_NOT_SET') // []
 ```
 
 Integer Lists
-```
-> export LIST=1,2,3
-> process.env.LIST
-'1,2,3'
 
-> env.list('LIST', { cast: 'int' })
-[1, 2, 3]
+```
+$ export LIST=1,2,3
+```
+
+```javascript
+process.env.LIST // '1,2,3'
+env.list('LIST', { cast: 'int' }) // [1, 2, 3]
 ```
 
 Float Lists
-```
-> export LIST=1.3,2.5,3.6
-'1.3,2.5,3.6'
 
-env.list('LIST', { cast: 'float' })
-[1.3, 2.2, 3.6]
+```
+$ export LIST=1.3,2.5,3.6
+```
+
+```javascript
+process.env.LIST // '1.3,2.5,3.6'
+env.list('LIST', { cast: 'float' }) // [1.3, 2.2, 3.6]
 ```
 
 Sometimes you just need to know if something exists
-```
-> env.ok('NOT_SET')
-false
-> env.ok('FOO')
-true
+
+```javascript
+env.ok('NOT_SET') // false
+env.ok('FOO') // true
 >
 ```
 
