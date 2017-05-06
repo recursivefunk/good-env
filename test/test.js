@@ -17,6 +17,18 @@ test('it checks existence', (t) => {
   t.is(result, false)
 })
 
+test('it gets all items', (t) => {
+  let result = env.getAll(['FOO', 'BANG'])
+  t.is(result.FOO, 'bar')
+  t.is(result.BANG, 'boop')
+  t.throws(() => env.getAll('nope'), 'Invalid arg nope')
+
+  result = env.getAll({ FOO: null, BAR: 'boop', BZZ: 'bang' })
+  t.is(result.FOO, 'bar')
+  t.is(result.BAR, 'boop')
+  t.is(result.BZZ, 'bang')
+})
+
 test('it returns default val for non-existing env', (t) => {
   const result = env.get('BANG', 'boop')
   t.is(result, 'boop')
@@ -77,7 +89,8 @@ test('returns a list of values', (t) => {
   let result = env.getList('MY_LIST')
   t.is(result.length, 3)
   t.is(result[0], 'foo')
-  // Again to hit the cache
+  // test shortcut
+  result = null
   result = env.list('MY_LIST')
   t.is(result.length, 3)
   t.is(result[0], 'foo')

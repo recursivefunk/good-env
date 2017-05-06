@@ -4,3 +4,7 @@ checkout:
 dependencies:
   pre:
     - nvm install "$(< .nvmrc)"
+test:
+  override:
+    - npm run lint
+    - npm test

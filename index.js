@@ -21,7 +21,7 @@ const Env = component()
       } else if (is.array(keyObj)) {
         keys = keyObj.map(k => k.trim())
       } else {
-        throw new Error(`Invalid key(s) ${keyObj}`)
+        throw Error(`Invalid key(s) ${keyObj}`)
       }
 
       keys.some((key) => {
@@ -38,6 +38,33 @@ const Env = component()
       value = (is.string(value)) ? value.trim() : value
 
       return value
+    },
+
+    /**
+    * @description Gets all items specified in the object. If the item is an
+    * array, the function will perform a standard get with no defaults. If the
+    * item is an object {}, the function will use the values as defaults -
+    * null values will be treated as no default specified
+    *
+    *
+    */
+    getAll (items) {
+      let itemsArr
+      if (is.array(items)) {
+        itemsArr = items.map((key) => this.get(key))
+        return itemsArr.reduce((prev, next, index) => {
+          prev[items[index]] = itemsArr[index]
+          return prev
+        }, {})
+      } else if (is.json(items)) {
+        return Object.keys(items).reduce((prev, next, index) => {
+          const val = this.get(next, items[next])
+          prev[next] = val
+          return prev
+        }, {})
+      } else {
+        throw Error(`Invalid arg ${items}`)
+      }
     },
 
     /**
