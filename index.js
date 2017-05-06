@@ -6,6 +6,20 @@ const ok = is.existy
 
 const Env = component()
   .methods({
+    getAll(items) {
+      let itemsArr
+      if (is.array(items)) {
+        itemsArr = items.map((key) => this.get(key))
+        return itemsArr.reduce((prev, next, index) => {
+          prev[items[index]] = itemsArr[index]
+          return prev
+        }, {})
+      } else if (is.json(items)) {
+        // deal with it
+      } else {
+        throw Error(`Invalid arg ${items}`)
+      }
+    },
     /**
      * @description Fetches the env var with the given key. If no env var
      * with the specified key exists, the default value is returned if it is

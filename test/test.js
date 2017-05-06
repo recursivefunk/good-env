@@ -5,6 +5,14 @@ require('dotenv').config({ path: 'test/test.env' })
 const test = require('ava')
 const env = require('../index')
 
+
+test('it gets all items', (t) => {
+  const result = env.getAll(['FOO', 'BANG'])
+  t.is(result.FOO, 'bar')
+  t.is(result.BANG, 'boop')
+  t.throws(() => env.getAll('nope'), 'Invalid arg nope')
+})
+
 test('it fetches existing env', (t) => {
   const result = env.get('FOO')
   t.is(result, 'bar')
