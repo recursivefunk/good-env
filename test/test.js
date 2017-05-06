@@ -5,14 +5,6 @@ require('dotenv').config({ path: 'test/test.env' })
 const test = require('ava')
 const env = require('../index')
 
-
-test('it gets all items', (t) => {
-  const result = env.getAll(['FOO', 'BANG'])
-  t.is(result.FOO, 'bar')
-  t.is(result.BANG, 'boop')
-  t.throws(() => env.getAll('nope'), 'Invalid arg nope')
-})
-
 test('it fetches existing env', (t) => {
   const result = env.get('FOO')
   t.is(result, 'bar')
@@ -23,6 +15,18 @@ test('it checks existence', (t) => {
   t.is(result, true)
   result = env.ok('NOPE')
   t.is(result, false)
+})
+
+test('it gets all items', (t) => {
+  let result = env.getAll(['FOO', 'BANG'])
+  t.is(result.FOO, 'bar')
+  t.is(result.BANG, 'boop')
+  t.throws(() => env.getAll('nope'), 'Invalid arg nope')
+
+  result = env.getAll({ FOO: null, BAR: 'boop', BZZ: 'bang' })
+  t.is(result.FOO, 'bar')
+  t.is(result.BAR, 'boop')
+  t.is(result.BZZ, 'bang')
 })
 
 test('it returns default val for non-existing env', (t) => {
@@ -85,7 +89,8 @@ test('returns a list of values', (t) => {
   let result = env.getList('MY_LIST')
   t.is(result.length, 3)
   t.is(result[0], 'foo')
-  // Again to hit the cache
+  // test shortcut
+  result = null
   result = env.list('MY_LIST')
   t.is(result.length, 3)
   t.is(result[0], 'foo')
