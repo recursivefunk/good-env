@@ -50,10 +50,8 @@ const Env = component()
     */
     getAll (items) {
       const self = this
-      let itemsArr
       if (is.array(items)) {
-        itemsArr = items.map((key) => this.get(key))
-        return arrReducer(itemsArr)
+        return arrReducer(items)
       } else if (is.json(items)) {
         return objReducer(items)
       } else {
@@ -68,9 +66,10 @@ const Env = component()
         }, {})
       }
 
-      function arrReducer(arr) {
+      function arrReducer(keys) {
+        const arr = items.map((key) => self.get(key))
         return arr.reduce((prev, next, index) => {
-          prev[items[index]] = arr[index]
+          prev[keys[index]] = arr[index]
           return prev
         }, {})
       }
