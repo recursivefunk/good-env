@@ -49,21 +49,30 @@ const Env = component()
     *
     */
     getAll (items) {
+      const self = this
       let itemsArr
       if (is.array(items)) {
         itemsArr = items.map((key) => this.get(key))
-        return itemsArr.reduce((prev, next, index) => {
-          prev[items[index]] = itemsArr[index]
-          return prev
-        }, {})
+        return arrReducer(itemsArr)
       } else if (is.json(items)) {
-        return Object.keys(items).reduce((prev, next, index) => {
-          const val = this.get(next, items[next])
+        return objReducer(items)
+      } else {
+        throw Error(`Invalid arg ${items}`)
+      }
+
+      function objReducer(obj) {
+        return Object.keys(obj).reduce((prev, next, index) => {
+          const val = self.get(next, obj[next])
           prev[next] = val
           return prev
         }, {})
-      } else {
-        throw Error(`Invalid arg ${items}`)
+      }
+
+      function arrReducer(arr) {
+        return arr.reduce((prev, next, index) => {
+          prev[items[index]] = arr[index]
+          return prev
+        }, {})
       }
     },
 
@@ -78,7 +87,7 @@ const Env = component()
 
     /**
      * @description Fetches the value at the given key and attempts to
-     * coherse it into a boolean
+     * coerce it into a boolean
      *
      */
     getBool (key, defaultVal) {

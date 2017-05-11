@@ -1,6 +1,6 @@
 'use strict'
 
-require('dotenv').config({ path: 'test/test.env' })
+  require('dotenv').config({ path: 'test/test.env' })
 
 const test = require('ava')
 const env = require('../index')

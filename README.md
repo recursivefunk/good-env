@@ -50,7 +50,7 @@ Batch Gets
 ```javascript
 env.getAll(['SECRET', 'HOST']) // ['shhh', 'localhost']
 // defaults work here too
-env.getAll({ 
+env.getAll({
   A_SECRET: 'lolz', HOST: null // null means no default
 }) // { A_SECRET: 'lolz', HOST: 'localhost' }
 ```
