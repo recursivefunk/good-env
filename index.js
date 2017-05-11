@@ -58,7 +58,7 @@ const Env = component()
         throw Error(`Invalid arg ${items}`)
       }
 
-      function objReducer(obj) {
+      function objReducer (obj) {
         return Object.keys(obj).reduce((prev, next, index) => {
           const val = self.get(next, obj[next])
           prev[next] = val
@@ -66,7 +66,7 @@ const Env = component()
         }, {})
       }
 
-      function arrReducer(keys) {
+      function arrReducer (keys) {
         const arr = items.map((key) => self.get(key))
         return arr.reduce((prev, next, index) => {
           prev[keys[index]] = arr[index]
