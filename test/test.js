@@ -17,6 +17,24 @@ test('it checks existence', (t) => {
   t.is(result, false)
 })
 
+test('it checks existence of every item', (t) => {
+  // 'FOO' and 'BANG' both exist - expect true
+  let result = env.ok('FOO', 'BANG')
+  t.is(result, true)
+  result = null
+  // 'BEEZ' does not exist - expect false
+  result = env.ok('BEEZ', 'FOO')
+  t.is(result, false)
+})
+
+test('it returns the keys which do not exist', (t) => {
+  let result = env.whichNotOk('FOO', 'BANG', 'BEEZ', 'FRANK')
+  t.truthy(result.BEEZ)
+  t.truthy(result.FRANK)
+  t.falsy(result.FOO)
+  t.falsy(result.BANG)
+})
+
 test('it gets all items', (t) => {
   let result = env.getAll(['FOO', 'BANG'])
   t.is(result.FOO, 'bar')

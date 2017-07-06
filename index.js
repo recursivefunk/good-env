@@ -74,12 +74,26 @@ const Env = component()
     },
 
     /**
-     * @description Determines whether or not the value at the given key is
+     * @description Determines whether or not all of the values given key is
      * truthy
      *
      */
-    ok (key) {
-      return ok(process.env[key])
+    ok (...keys) {
+      return keys.every(key => ok(process.env[key]))
+    },
+
+    /**
+     * @description Determines which items are NOT present in the environment.
+     * A dictionary is returned for easy existence checking
+     *
+    */
+    whichNotOk (...keys) {
+      return keys
+        .filter(key => !ok(process.env[key]))
+        .reduce((accum, key) => {
+          accum[key] = true // true from the assertion: This item is NOT present.
+          return accum
+        }, {})
     },
 
     /**
