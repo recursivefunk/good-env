@@ -49,7 +49,6 @@ const Env = component()
     *
     */
     getAll (items) {
-      const self = this
       if (is.array(items)) {
         return arrReducer(items, this.get)
       } else if (is.json(items)) {
@@ -151,7 +150,7 @@ const Env = component()
      * coherse it into a list of literal values
      *
      */
-    getList (key, opts={ dilim:',', cast:null }) {
+    getList (key, opts = { dilim: ',', cast: null }) {
       const { dilim, cast } = opts
       let value
 
@@ -184,4 +183,3 @@ module.exports = Env.create()
 const parse = (items, converter) => items.map(t => converter(t, 10))
 const mapFloats = items => parse(items, parseFloat)
 const mapInts = items => parse(items, parseInt)
-
