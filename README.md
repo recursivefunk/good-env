@@ -102,7 +102,11 @@ Sometimes you just need to know if something exists
 ```javascript
 env.ok('NOT_SET') // false
 env.ok('FOO') // true
->
+// works with multiple arguments
+env.ok('FOO', 'BAR') // true
+env.ok('FOO', 'BAR', 'NOT_SET') // false
+// maybe you want to know which items specifically are not set
+env.whichNotOk('FOO', 'BAR', 'NOT_SET') // { NOT_SET: true }
 ```
 
 ## Shortcut Methods
