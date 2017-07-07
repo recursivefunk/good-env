@@ -5,6 +5,10 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
+`good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
+about raw strings is OK for some things but for non-trivial applications, booleans, integers, floats, lists or even
+the existence (or non-existence) of environment configurations can play a key role in how an application behaves.
+
 ```
 $ npm install good-env --save
 ```
