@@ -1,7 +1,7 @@
 {
   "name": "good-env",
-  "version": "1.5.8",
-  "description": "Sensible environment variable parsing for node",
+  "version": "2.0.0",
+  "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
     "test": "nyc --check-coverage --lines 100 ava",
@@ -32,6 +32,6 @@
     "nyc": "^10.1.2"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=5"
   }
 }

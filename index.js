@@ -49,25 +49,23 @@ const Env = component()
     *
     */
     getAll (items) {
-      const self = this
       if (is.array(items)) {
-        return arrReducer(items)
+        return arrReducer(items, this.get)
       } else if (is.json(items)) {
-        return objReducer(items)
+        return objReducer(items, this.get)
       } else {
         throw Error(`Invalid arg ${items}`)
       }
 
-      function objReducer (obj) {
+      function objReducer (obj, getter) {
         return Object.keys(obj).reduce((prev, next, index) => {
-          const val = self.get(next, obj[next])
-          prev[next] = val
+          prev[next] = getter(next, obj[next])
           return prev
         }, {})
       }
 
-      function arrReducer (keys) {
-        const arr = items.map((key) => self.get(key))
+      function arrReducer (keys, getter) {
+        const arr = items.map(key => getter(key))
         return arr.reduce((prev, next, index) => {
           prev[keys[index]] = arr[index]
           return prev
@@ -76,12 +74,26 @@ const Env = component()
     },
 
     /**
-     * @description Determines whether or not the value at the given key is
+     * @description Determines whether or not all of the values given key is
      * truthy
      *
      */
-    ok (key) {
-      return ok(process.env[key])
+    ok (...keys) {
+      return keys.every(key => ok(process.env[key]))
+    },
+
+    /**
+     * @description Determines which items are NOT present in the environment.
+     * A dictionary is returned for easy existence checking
+     *
+    */
+    whichNotOk (...keys) {
+      return keys
+        .filter(key => !ok(process.env[key]))
+        .reduce((accum, key) => {
+          accum[key] = true // true from the assertion: This item is NOT present.
+          return accum
+        }, {})
     },
 
     /**
@@ -152,18 +164,17 @@ const Env = component()
      * coherse it into a list of literal values
      *
      */
-    getList (key, opts) {
-      opts = opts || {}
+    getList (key, opts = { dilim: ',', cast: null }) {
+      const { dilim, cast } = opts
       let value
 
       value = this.get(key, [])
 
       if (!is.array(value)) {
-        const dilim = opts.dilim || ','
         let ret = value.split(dilim).map(i => i.trim())
-        if (opts.cast === 'int') {
+        if (cast && cast === 'int') {
           ret = mapInts(ret)
-        } else if (opts.cast === 'float') {
+        } else if (cast && cast === 'float') {
           ret = mapFloats(ret)
         }
         return ret
@@ -177,17 +188,12 @@ const Env = component()
      *
      */
     list (key, opts) {
-      opts = opts || {}
       return this.getList(key, opts)
     }
   })
 
 module.exports = Env.create()
 
-function mapFloats (items) {
-  return items.map((t) => parseFloat(t, 10))
-}
-
-function mapInts (items) {
-  return items.map((t) => parseInt(t, 10))
-}
+const parse = (items, converter) => items.map(t => converter(t, 10))
+const mapFloats = items => parse(items, parseFloat)
+const mapInts = items => parse(items, parseInt)

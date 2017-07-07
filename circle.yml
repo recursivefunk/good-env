@@ -1,9 +1,6 @@
-checkout:
-  post:
-    - nvm install "$(< .nvmrc)"
-dependencies:
-  pre:
-    - nvm install "$(< .nvmrc)"
+machine:
+   node:
+     version: 6
 test:
   override:
     - npm run lint

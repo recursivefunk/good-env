@@ -5,6 +5,10 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
+`good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
+about raw strings is OK for some things but for non-trivial applications, booleans, integers, floats, lists or even
+the existence (or non-existence) of environment configurations can play a key role in how an application behaves.
+
 ```
 $ npm install good-env --save
 ```
@@ -102,7 +106,11 @@ Sometimes you just need to know if something exists
 ```javascript
 env.ok('NOT_SET') // false
 env.ok('FOO') // true
->
+// works with multiple arguments
+env.ok('FOO', 'BAR') // true
+env.ok('FOO', 'BAR', 'NOT_SET') // false
+// maybe you want to know which items specifically are not set
+env.whichNotOk('FOO', 'BAR', 'NOT_SET') // { NOT_SET: true }
 ```
 
 ## Shortcut Methods
