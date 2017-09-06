@@ -53,6 +53,7 @@ Batch Gets
 
 ```javascript
 env.getAll(['SECRET', 'HOST']) // ['shhh', 'localhost']
+
 // defaults work here too
 env.getAll({
   A_SECRET: 'lolz', HOST: null // null means no default
@@ -106,9 +107,12 @@ Sometimes you just need to know if something exists
 ```javascript
 env.ok('NOT_SET') // false
 env.ok('FOO') // true
-// works with multiple arguments
+
+// works with multiple arguments.
+// Returns true if ALL keys exist
 env.ok('FOO', 'BAR') // true
 env.ok('FOO', 'BAR', 'NOT_SET') // false
+
 // maybe you want to know which items specifically are not set
 env.whichNotOk('FOO', 'BAR', 'NOT_SET') // { NOT_SET: true }
 ```
