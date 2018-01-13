@@ -168,12 +168,13 @@ test('ensure string exists', t => {
 })
 
 test('ensure object type is correct', t => {
-  let result = env.ensure({ 'FOO': 'string' })
+  //let result = env.ensure({ 'FOO': 'string' })
+  let result = env.ensure({ 'FOO': { type:'string' } })
   t.is(true, result)
 })
 
 test('ensure missing env throws', t => {
-  const err = t.throws(() => env.ensure({ 'NOPE': 'number' }))
+  const err = t.throws(() => env.ensure({ 'NOPE': { type: 'number' } }))
   t.is(
     'Unexpected result for key="NOPE". It may not exist or may not be a valid "number"',
     err.message
@@ -181,7 +182,7 @@ test('ensure missing env throws', t => {
 })
 
 test('ensure invalid env type throws', t => {
-  const err = t.throws(() => env.ensure({ 'FOO': 'number' }))
+  const err = t.throws(() => env.ensure({ 'FOO': { type: 'number' } }))
   t.is(
     'Unexpected result for key="FOO". It may not exist or may not be a valid "number"',
     err.message
@@ -189,12 +190,32 @@ test('ensure invalid env type throws', t => {
 })
 
 test('ensure various envs are correct', t => {
-  const result = env.ensure('FOO', { 'INT_NUM': 'number' })
+  const result = env.ensure('FOO', { 'INT_NUM': { type: 'number' } })
   t.is(true, result)
 })
 
+test('ensure validator function returns true for valid values', t => {
+  const ok = num => num % 2 === 0
+  const spec = {
+    type: 'number',
+    ok
+  }
+  const result = env.ensure({ 'INT_NUM': spec })
+  t.is(true, result)
+})
+
+test('ensure validator function throws for invalid values', t => {
+  const ok = num => num % 2 === 1
+  const spec = {
+    type: 'number',
+    ok
+  }
+  const e = t.throws(() => env.ensure({ 'INT_NUM': spec }))
+  t.is(e.message, 'Value 10 did not pass validator function for key "INT_NUM"')
+})
+
 test('ensure throws at first failure', t => {
-  const err = t.throws(() => env.ensure({'FOO': 'boolean'}, 'INT_NUM'))
+  const err = t.throws(() => env.ensure({'FOO': { type: 'boolean'} }, 'INT_NUM'))
   t.is(
     'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"',
     err.message

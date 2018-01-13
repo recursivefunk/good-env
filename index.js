@@ -101,8 +101,13 @@ const Env = component()
      * exist, or exist and are of a designated type
      *
      * ensure(
-     *  'HOSTNAME', // Will ensure 'HOSTNAME' exists
-     *  { 'PORT': 'number' } // Will ensure 'PORT' both exists and is a number
+     *  // Will ensure 'HOSTNAME' exists
+     *  'HOSTNAME',
+     *  // Will ensure 'PORT' both exists and is a number
+     *  { 'PORT': { type: 'number' }},
+     *  // Will ensure 'INTERVAL' exists, it's a number and its value is greater
+     *  // than or equal to 1000
+     *  { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
      *  // ...
      *)
      *
@@ -131,9 +136,10 @@ const Env = component()
           }
         } else if (is.json(item)) {
           const key = Object.keys(item)[0]
-          const type = item[key]
+          const type = item[key].type
+          const validator = item[key].ok
 
-          if (!validType(type)) {
+          if (type && !validType(type)) {
             throw Error(`Invalid expected type "${type}"`)
           } else {
             const kit = getKit(type)
@@ -141,10 +147,18 @@ const Env = component()
             const result = kit.validator(val)
             if (!result) {
               throw Error(`Unexpected result for key="${key}". It may not exist or may not be a valid "${type}"`)
-            } else {
-              return true
             }
+
+            if (validator && is.function(validator)) {
+              const valid = validator(val)
+              if (!valid) {
+                throw Error(`Value ${val} did not pass validator function for key "${key}"`)
+              }
+            }
+
+            return true
           }
+
         }
       })
     },

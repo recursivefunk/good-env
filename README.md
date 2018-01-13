@@ -107,8 +107,13 @@ Use `.ensure(item1, item2...)` to check the existence and/or type of a few items
 
 ```javascirpt
 env.ensure(
-     'HOSTNAME',            // Will ensure 'HOSTNAME' exists
-     { 'PORT': 'number' }  // Will ensure 'PORT' both exists and is a number
+    // Will ensure 'HOSTNAME' exists
+    'HOSTNAME',
+    // Will ensure 'PORT' both exists and is a number
+    { 'PORT': { type: 'number' }},
+    // Will ensure 'INTERVAL' exists, it's a number and its value is greater
+    // than or equal to 1000
+    { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
     // ... any number of arguments
 )
 ```
