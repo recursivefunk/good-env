@@ -38,7 +38,7 @@ Using `good-env`
 
 ```javascript
 const env = require('good-env')
-env.getInt('FOO') // 10
+env.getNumber('FOO') // 10
 env.getBool('A_TRUE_VAL') // true
 env.getBool('A_FALSE_VAL') // false
 ```
@@ -80,7 +80,7 @@ env.getList('LIST') // ['foo', 'bar', 'bang']
 env.getList('LIST_NOT_SET') // []
 ```
 
-Integer Lists
+Number Lists
 
 ```
 $ export LIST=1,2,3
@@ -88,7 +88,7 @@ $ export LIST=1,2,3
 
 ```javascript
 process.env.LIST // '1,2,3'
-env.list('LIST', { cast: 'int' }) // [1, 2, 3]
+env.list('LIST', { cast: 'number' }) // [1, 2, 3]
 ```
 
 Sometimes you just need to know if something exists
@@ -121,7 +121,7 @@ env.ensure(
 ## Shortcut Methods
 
 ```javascript
-env.int() ==> env.getInt()
+env.num() ==> env.getNumber()
 env.bool() ==> env.getBool()
 env.list() ==> env.getList()
 ```
