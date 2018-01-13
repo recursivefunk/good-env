@@ -1,10 +1,10 @@
 {
   "name": "good-env",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --lines 100 ava",
+    "test": "nyc --check-coverage --lines 85 ava",
     "lint": "eslint test/ index.js"
   },
   "keywords": [

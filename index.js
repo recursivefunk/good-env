@@ -1,4 +1,3 @@
-'use strict'
 
 const is = require('is_js')
 const component = require('stampit')
@@ -24,7 +23,7 @@ const Env = component()
         throw Error(`Invalid key(s) ${keyObj}`)
       }
 
-      keys.some((key) => {
+      keys.some(key => {
         if (ok(process.env[key])) {
           value = process.env[key]
           return true
@@ -49,27 +48,27 @@ const Env = component()
     *
     */
     getAll (items) {
+      const objReducer = (obj, getter) => (
+        Object.keys(obj).reduce((prev, next, index) => {
+          prev[next] = getter(next, obj[next])
+          return prev
+        }, {})
+      )
+
+      const arrReducer = (keys, getter) => {
+        const arr = items.map(key => getter(key))
+        return arr.reduce((prev, next, index) => {
+          prev[keys[index]] = arr[index]
+          return prev
+        }, {})
+      }
+
       if (is.array(items)) {
         return arrReducer(items, this.get)
       } else if (is.json(items)) {
         return objReducer(items, this.get)
       } else {
         throw Error(`Invalid arg ${items}`)
-      }
-
-      function objReducer (obj, getter) {
-        return Object.keys(obj).reduce((prev, next, index) => {
-          prev[next] = getter(next, obj[next])
-          return prev
-        }, {})
-      }
-
-      function arrReducer (keys, getter) {
-        const arr = items.map(key => getter(key))
-        return arr.reduce((prev, next, index) => {
-          prev[keys[index]] = arr[index]
-          return prev
-        }, {})
       }
     },
 
@@ -78,22 +77,76 @@ const Env = component()
      * truthy
      *
      */
-    ok (...keys) {
-      return keys.every(key => ok(process.env[key]))
-    },
+    ok: (...keys) => keys.every(key => ok(process.env[key])),
 
     /**
      * @description Determines which items are NOT present in the environment.
      * A dictionary is returned for easy existence checking
      *
+     * @deprecated Use ensure() instead
+     *
     */
-    whichNotOk (...keys) {
+    whichNotOk: (...keys) => {
+      console.log('whichNotOk() is deprecated. Please use ensure() instead')
       return keys
         .filter(key => !ok(process.env[key]))
         .reduce((accum, key) => {
           accum[key] = true // true from the assertion: This item is NOT present.
           return accum
         }, {})
+    },
+
+    /**
+     * @description This method ensures 1 to many environment variables either
+     * exist, or exist and are of a designated type
+     *
+     * ensure(
+     *  'HOSTNAME', // Will ensure 'HOSTNAME' exists
+     *  { 'PORT': 'number' } // Will ensure 'PORT' both exists and is a number
+     *  // ...
+     *)
+     *
+     */
+    ensure (...items) {
+      const self = this
+      const getKit = item => {
+        switch (item) {
+          case 'string':
+            return { validator: is.string, getter: self.get.bind(self) }
+          case 'number':
+            return { validator: is.number, getter: self.getNumber.bind(self) }
+          case 'boolean':
+            return { validator: is.boolean, getter: self.getBool.bind(self) }
+          default:
+            throw Error(`Invalid type "${item}"`)
+        }
+      }
+
+      return items.every(item => {
+        if (is.string(item)) {
+          if (this.ok(item)) {
+            return true
+          } else {
+            throw Error(`No environment configuration for var "${item}"`)
+          }
+        } else if (is.json(item)) {
+          const key = Object.keys(item)[0]
+          const type = item[key]
+
+          if (!validType(type)) {
+            throw Error(`Invalid expected type "${type}"`)
+          } else {
+            const kit = getKit(type)
+            const val = kit.getter(key)
+            const result = kit.validator(val)
+            if (!result) {
+              throw Error(`Unexpected result for key="${key}". It may not exist or may not be a valid "${type}"`)
+            } else {
+              return true
+            }
+          }
+        }
+      })
     },
 
     /**
@@ -135,7 +188,7 @@ const Env = component()
      * coherse it into an integer
      *
      */
-    getInt (key, defaultVal) {
+    getNumber (key, defaultVal) {
       let value
       let intVal
       let valIsInt
@@ -152,16 +205,34 @@ const Env = component()
     },
 
     /**
-     * @description An alias function for getInt()
+     * @deprecated Use getNumber() instead
+     */
+    getInt (key, defaultVal) {
+      console.log('getInt() is deprecated. Please use getNumber() or num() instead.')
+      return this.getNumber(key, defaultVal)
+    },
+
+    /**
+     * @deprecated Use getNum() instead
      *
      */
     int (key, defaultVal) {
+      console.log('int() is deprecated. Please use num() instead()')
       return this.getInt(key, defaultVal)
+    },
+
+    /**
+     * @description An alias function for getNumber()
+     *
+     */
+    num (key, defaultVal) {
+      return this.getNumber(key, defaultVal)
     },
 
     /**
      * @description Fetches the value at the given key and attempts to
      * coherse it into a list of literal values
+     *
      *
      */
     getList (key, opts = { dilim: ',', cast: null }) {
@@ -197,3 +268,4 @@ module.exports = Env.create()
 const parse = (items, converter) => items.map(t => converter(t, 10))
 const mapFloats = items => parse(items, parseFloat)
 const mapInts = items => parse(items, parseInt)
+const validType = item => ['number', 'boolean', 'string'].includes(item)
