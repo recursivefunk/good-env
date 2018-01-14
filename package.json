@@ -17,8 +17,7 @@
   "author": "Johnny Ray Austin <johnny@johnnyray.me>",
   "license": "MIT",
   "dependencies": {
-    "is_js": "^0.8.0",
-    "stampit": "^2.1.2"
+    "is_js": "^0.8.0"
   },
   "devDependencies": {
     "ava": "^0.17.0",

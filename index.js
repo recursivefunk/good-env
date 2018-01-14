@@ -3,8 +3,8 @@ const is = require('is_js')
 const component = require('stampit')
 const ok = is.existy
 
-const Env = component()
-  .methods({
+module.exports = Object
+  .create({
     /**
      * @description Fetches the env var with the given key. If no env var
      * with the specified key exists, the default value is returned if it is
@@ -274,8 +274,6 @@ const Env = component()
       return this.getList(key, opts)
     }
   })
-
-module.exports = Env.create()
 
 const parse = (items, converter) => items.map(t => converter(t, 10))
 const mapFloats = items => parse(items, parseFloat)
