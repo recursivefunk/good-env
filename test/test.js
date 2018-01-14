@@ -156,10 +156,6 @@ function isNum (i) {
   return Number(i) === i && i % 1 === 0
 }
 
-function isFloat (i) {
-  return Number(i) === i && i % 1 !== 0
-}
-
 test('ensure string exists', t => {
   let result = env.ensure('FOO')
   t.is(true, result)
@@ -168,8 +164,7 @@ test('ensure string exists', t => {
 })
 
 test('ensure object type is correct', t => {
-  //let result = env.ensure({ 'FOO': 'string' })
-  let result = env.ensure({ 'FOO': { type:'string' } })
+  let result = env.ensure({'FOO': { type: 'string' }})
   t.is(true, result)
 })
 
@@ -215,7 +210,7 @@ test('ensure validator function throws for invalid values', t => {
 })
 
 test('ensure throws at first failure', t => {
-  const err = t.throws(() => env.ensure({'FOO': { type: 'boolean'} }, 'INT_NUM'))
+  const err = t.throws(() => env.ensure({'FOO': { type: 'boolean' }}, 'INT_NUM'))
   t.is(
     'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"',
     err.message

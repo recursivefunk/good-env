@@ -1,6 +1,5 @@
 
 const is = require('is_js')
-const component = require('stampit')
 const ok = is.existy
 
 module.exports = Object
@@ -155,10 +154,8 @@ module.exports = Object
                 throw Error(`Value ${val} did not pass validator function for key "${key}"`)
               }
             }
-
             return true
           }
-
         }
       })
     },
@@ -276,6 +273,5 @@ module.exports = Object
   })
 
 const parse = (items, converter) => items.map(t => converter(t, 10))
-const mapFloats = items => parse(items, parseFloat)
 const mapNums = items => parse(items, parseInt)
 const validType = item => ['number', 'boolean', 'string'].includes(item)

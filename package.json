@@ -12,7 +12,11 @@
     "environment-variables",
     "environment variables",
     "server",
-    "env"
+    "env",
+    "twelve-factor",
+    "twelve factor",
+    "12-factor",
+    "12 factor"
   ],
   "author": "Johnny Ray Austin <johnny@johnnyray.me>",
   "license": "MIT",
