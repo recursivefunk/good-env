@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 5
+    version: 6
   environment:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 dependencies:
