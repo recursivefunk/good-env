@@ -1,4 +1,3 @@
-'use strict'
 
 require('dotenv').config({ path: 'test/test.env' })
 
@@ -25,14 +24,6 @@ test('it checks existence of every item', (t) => {
   // 'BEEZ' does not exist - expect false
   result = env.ok('BEEZ', 'FOO')
   t.is(result, false)
-})
-
-test('it returns the keys which do not exist', (t) => {
-  let result = env.whichNotOk('FOO', 'BANG', 'BEEZ', 'FRANK')
-  t.truthy(result.BEEZ)
-  t.truthy(result.FRANK)
-  t.falsy(result.FOO)
-  t.falsy(result.BANG)
 })
 
 test('it gets all items', (t) => {
@@ -80,26 +71,26 @@ test('it breaks for invalid keys', (t) => {
 })
 
 test('returns integers', (t) => {
-  let result = env.getInt('INT_NUM')
+  let result = env.getNumber('INT_NUM')
   t.is(result, 10)
   result = null
-  result = env.int('INT_NUM')
+  result = env.num('INT_NUM')
   t.is(result, 10)
   result = null
-  result = env.int(['INTT', 'INT_NUM'])
+  result = env.num(['INTT', 'INT_NUM'])
   t.is(result, 10)
   result = null
-  result = env.int(['INTT', 'INT_NUM', 'INNTT'])
+  result = env.num(['INTT', 'INT_NUM', 'INNTT'])
   t.is(result, 10)
 })
 
 test('returns undefined for non-existing number', (t) => {
-  const result = env.getInt('INT_NOT_HERE')
+  const result = env.getNumber('INT_NOT_HERE')
   t.is(undefined, result)
 })
 
 test('returns undefined for existing non-number', (t) => {
-  const result = env.getInt('FOO')
+  const result = env.getNumber('FOO')
   t.is(undefined, result)
 })
 
@@ -120,13 +111,8 @@ test('returns empty list for non-existy', (t) => {
 })
 
 test('parses int list', (t) => {
-  let result = env.getList('MY_INT_LIST', { cast: 'int' })
-  result.forEach((i) => t.is(isInt(i), true))
-})
-
-test('parses float list', (t) => {
-  let result = env.getList('MY_FLOAT_LIST', { cast: 'float' })
-  result.forEach((i) => t.is(isFloat(i), true))
+  let result = env.getList('MY_INT_LIST', { cast: 'number' })
+  result.forEach((i) => t.is(isNum(i), true))
 })
 
 test('returns true for true', (t) => {
@@ -166,10 +152,67 @@ test('parses values with trailing whitespace', (t) => {
   t.is(result, 'val')
 })
 
-function isInt (i) {
+function isNum (i) {
   return Number(i) === i && i % 1 === 0
 }
 
-function isFloat (i) {
-  return Number(i) === i && i % 1 !== 0
-}
+test('ensure string exists', t => {
+  let result = env.ensure('FOO')
+  t.is(true, result)
+  const err = t.throws(() => env.ensure('NOPE'))
+  t.is('No environment configuration for var "NOPE"', err.message)
+})
+
+test('ensure object type is correct', t => {
+  let result = env.ensure({'FOO': { type: 'string' }})
+  t.is(true, result)
+})
+
+test('ensure missing env throws', t => {
+  const err = t.throws(() => env.ensure({ 'NOPE': { type: 'number' } }))
+  t.is(
+    'Unexpected result for key="NOPE". It may not exist or may not be a valid "number"',
+    err.message
+  )
+})
+
+test('ensure invalid env type throws', t => {
+  const err = t.throws(() => env.ensure({ 'FOO': { type: 'number' } }))
+  t.is(
+    'Unexpected result for key="FOO". It may not exist or may not be a valid "number"',
+    err.message
+  )
+})
+
+test('ensure various envs are correct', t => {
+  const result = env.ensure('FOO', { 'INT_NUM': { type: 'number' } })
+  t.is(true, result)
+})
+
+test('ensure validator function returns true for valid values', t => {
+  const ok = num => num % 2 === 0
+  const spec = {
+    type: 'number',
+    ok
+  }
+  const result = env.ensure({ 'INT_NUM': spec })
+  t.is(true, result)
+})
+
+test('ensure validator function throws for invalid values', t => {
+  const ok = num => num % 2 === 1
+  const spec = {
+    type: 'number',
+    ok
+  }
+  const e = t.throws(() => env.ensure({ 'INT_NUM': spec }))
+  t.is(e.message, 'Value 10 did not pass validator function for key "INT_NUM"')
+})
+
+test('ensure throws at first failure', t => {
+  const err = t.throws(() => env.ensure({'FOO': { type: 'boolean' }}, 'INT_NUM'))
+  t.is(
+    'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"',
+    err.message
+  )
+})

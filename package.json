@@ -1,10 +1,10 @@
 {
   "name": "good-env",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --lines 100 ava",
+    "test": "nyc --check-coverage --lines 85 ava",
     "lint": "eslint test/ index.js"
   },
   "keywords": [
@@ -12,26 +12,29 @@
     "environment-variables",
     "environment variables",
     "server",
-    "env"
+    "env",
+    "twelve-factor",
+    "twelve factor",
+    "12-factor",
+    "12 factor"
   ],
   "author": "Johnny Ray Austin <johnny@johnnyray.me>",
   "license": "MIT",
   "dependencies": {
-    "is_js": "^0.8.0",
-    "stampit": "^2.1.2"
+    "is_js": "^0.8.0"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
-    "dotenv": "^2.0.0",
-    "eslint": "^3.19.0",
-    "eslint-config-standard": "^10.2.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^4.2.2",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "nyc": "^10.1.2"
+    "ava": "0.24.0",
+    "dotenv": "4.0.0",
+    "eslint": "3.19.0",
+    "eslint-config-standard": "10.2.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-node": "4.2.2",
+    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-standard": "3.0.1",
+    "nyc": "10.1.2"
   },
   "engines": {
-    "node": ">=5"
+    "node": ">=6"
   }
 }
