@@ -111,13 +111,8 @@ test('returns empty list for non-existy', (t) => {
 })
 
 test('parses int list', (t) => {
-  let result = env.getList('MY_INT_LIST', { cast: 'int' })
+  let result = env.getList('MY_INT_LIST', { cast: 'number' })
   result.forEach((i) => t.is(isNum(i), true))
-})
-
-test('parses float list', (t) => {
-  let result = env.getList('MY_FLOAT_LIST', { cast: 'float' })
-  result.forEach((i) => t.is(isFloat(i), true))
 })
 
 test('returns true for true', (t) => {

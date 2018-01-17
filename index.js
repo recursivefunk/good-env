@@ -243,10 +243,8 @@ const Env = component()
 
       if (!is.array(value)) {
         let ret = value.split(dilim).map(i => i.trim())
-        if (cast && cast === 'int') {
-          ret = mapInts(ret)
-        } else if (cast && cast === 'float') {
-          ret = mapFloats(ret)
+        if (cast && cast === 'number') {
+          ret = mapNums(ret)
         }
         return ret
       } else {
@@ -267,5 +265,5 @@ module.exports = Env.create()
 
 const parse = (items, converter) => items.map(t => converter(t, 10))
 const mapFloats = items => parse(items, parseFloat)
-const mapInts = items => parse(items, parseInt)
+const mapNums = items => parse(items, parseInt)
 const validType = item => ['number', 'boolean', 'string'].includes(item)
