@@ -9,6 +9,10 @@ module.exports = Object
      * with the specified key exists, the default value is returned if it is
      * provided else it returns undefined
      *
+     * @param {(string|string[])} keyObj - A unique key for an item or a list of possible keys
+     * @param {(string|number)} defaultVal - The default value of an item if it doesn't
+     * already exist
+     *
      */
     get (keyObj, defaultVal) {
       let keys
@@ -44,6 +48,7 @@ module.exports = Object
     * item is an object {}, the function will use the values as defaults -
     * null values will be treated as no default specified
     *
+    * @param {string[]} items - An array of keys
     *
     */
     getAll (items) {
@@ -74,6 +79,8 @@ module.exports = Object
     /**
      * @description Determines whether or not all of the values given key is
      * truthy
+     *
+     * @param {(string|string[])} keys - A unique key or array of keys
      *
      */
     ok: (...keys) => keys.every(key => ok(process.env[key])),
@@ -161,8 +168,11 @@ module.exports = Object
     },
 
     /**
-     * @description Fetches the value at the given key and attempts to
-     * coerce it into a boolean
+     * @description Fetches the value at the given key and attempts to coerce
+     * it into a boolean
+     *
+     * @param {string} key - A unique key
+     * @param {boolean} defaultVal - The default value
      *
      */
     getBool (key, defaultVal) {
@@ -189,6 +199,9 @@ module.exports = Object
     /**
      * @description An alias function for getBool()
      *
+     * @param {string} key - A unique key
+     * @param {boolean} defaultVal - The default value if none exists
+     *
      */
     bool (key, defaultVal) {
       return this.getBool(key, defaultVal)
@@ -197,6 +210,9 @@ module.exports = Object
     /**
      * @description Fetches the value at the given key and attempts to
      * coherse it into an integer
+     *
+     * @param {string} key - A unique key
+     * @param {number} defaultVal - The default value
      *
      */
     getNumber (key, defaultVal) {
@@ -244,6 +260,8 @@ module.exports = Object
      * @description Fetches the value at the given key and attempts to
      * coherse it into a list of literal values
      *
+     * @param {string} key - A unique key
+     * @param {object} options
      *
      */
     getList (key, opts = { dilim: ',', cast: null }) {
@@ -265,6 +283,9 @@ module.exports = Object
 
     /**
      * @description An alias function for getList()
+     *
+     * @param {string} key - A unique key
+     * @param {object} options
      *
      */
     list (key, opts) {
