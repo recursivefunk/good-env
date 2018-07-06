@@ -106,6 +106,7 @@ module.exports = Object
      * @description This method ensures 1 to many environment variables either
      * exist, or exist and are of a designated type
      *
+     * @example
      * ensure(
      *  // Will ensure 'HOSTNAME' exists
      *  'HOSTNAME',
