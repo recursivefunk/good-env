@@ -56,7 +56,8 @@ env.getAll(['SECRET', 'HOST']) // ['shhh', 'localhost']
 
 // defaults work here too
 env.getAll({
-  A_SECRET: 'lolz', HOST: null // null means no default
+  A_SECRET: 'lolz', 
+  HOST: null // null means no default
 }) // { A_SECRET: 'lolz', HOST: 'localhost' }
 ```
 
@@ -108,14 +109,18 @@ Note: If any variable passed to `ensure()` doesn't exist or is otherwise
 invalid, an error will be thrown
 
 ```javascirpt
+
 env.ensure(
     // Will ensure 'HOSTNAME' exists
     'HOSTNAME',
+    
     // Will ensure 'PORT' both exists and is a number
     { 'PORT': { type: 'number' }},
+    
     // Will ensure 'INTERVAL' exists, it's a number and its value is greater
     // than or equal to 1000
     { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
+    
     // ... any number of arguments
 )
 ```
