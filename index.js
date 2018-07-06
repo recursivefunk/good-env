@@ -116,7 +116,7 @@ module.exports = Object
      *  // than or equal to 1000
      *  { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
      *  // ...
-     *)
+     * )
      *
      */
     ensure (...items) {
