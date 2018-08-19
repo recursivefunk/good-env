@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nyc --check-coverage --lines 85 node test/test.js",
     "lint": "eslint test/ index.js",
-    "ci": "eslint test/ index.js && nyc --check-coverage --lines 85 ava"
+    "ci": "eslint test/ index.js && nyc --check-coverage --lines 85 node test/test.js"
   },
   "keywords": [
     "environment",
