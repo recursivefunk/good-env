@@ -70,6 +70,13 @@ test('it tries multiple keys in order', (t) => {
   t.end()
 })
 
+test.only('ensure breaks for an invalid type', (t) => {
+  t.throws(() => {
+    env.ensure([{}])
+  }, 'Invalid key [object Object]')
+  t.end()
+})
+
 test('it breaks for invalid keys', (t) => {
   t.throws(() => {
     env.get({ foo: 'bar' })

@@ -86,23 +86,6 @@ module.exports = Object
     ok: (...keys) => keys.every(key => ok(process.env[key])),
 
     /**
-     * @description Determines which items are NOT present in the environment.
-     * A dictionary is returned for easy existence checking
-     *
-     * @deprecated Use ensure() instead
-     *
-    */
-    whichNotOk: (...keys) => {
-      console.log('whichNotOk() is deprecated. Please use ensure() instead')
-      return keys
-        .filter(key => !ok(process.env[key]))
-        .reduce((accum, key) => {
-          accum[key] = true // true from the assertion: This item is NOT present.
-          return accum
-        }, {})
-    },
-
-    /**
      * @description This method ensures 1 to many environment variables either
      * exist, or exist and are of a designated type
      *
@@ -124,12 +107,16 @@ module.exports = Object
       const getKit = item => {
         switch (item) {
           case 'string':
+            console.log('triggered string')
             return { validator: is.string, getter: self.get.bind(self) }
           case 'number':
+            console.log('triggered number')
             return { validator: is.number, getter: self.getNumber.bind(self) }
           case 'boolean':
+            console.log('triggered boolean')
             return { validator: is.boolean, getter: self.getBool.bind(self) }
           default:
+            console.log(`i thould throw\n`)
             throw Error(`Invalid type "${item}"`)
         }
       }
@@ -164,6 +151,8 @@ module.exports = Object
             }
             return true
           }
+        } else {
+          throw Error(`Invalid key ${item}`)
         }
       })
     },
@@ -230,23 +219,6 @@ module.exports = Object
       } else if (valIsInt) {
         return intVal
       }
-    },
-
-    /**
-     * @deprecated Use getNumber() instead
-     */
-    getInt (key, defaultVal) {
-      console.log('getInt() is deprecated. Please use getNumber() or num() instead.')
-      return this.getNumber(key, defaultVal)
-    },
-
-    /**
-     * @deprecated Use getNum() instead
-     *
-     */
-    int (key, defaultVal) {
-      console.log('int() is deprecated. Please use num() instead()')
-      return this.getInt(key, defaultVal)
     },
 
     /**

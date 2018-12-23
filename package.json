@@ -1,6 +1,6 @@
 {
   "name": "good-env",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
@@ -25,17 +25,16 @@
     "is_js": "^0.8.0"
   },
   "devDependencies": {
-    "dotenv": "4.0.0",
-    "eslint": "3.19.0",
-    "eslint-config-standard": "10.2.0",
-    "eslint-plugin-import": "2.2.0",
-    "eslint-plugin-node": "4.2.2",
-    "eslint-plugin-promise": "3.5.0",
-    "eslint-plugin-standard": "3.0.1",
-    "nyc": "10.1.2",
-    "tape": "^4.9.1"
+    "dotenv": "6.2.0",
+    "eslint": "5.11.0",
+    "eslint-config-standard": "12.0.0",
+    "eslint-plugin-node": "8.0.0",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-standard": "4.0.0",
+    "nyc": "13.1.0",
+    "tape": "4.9.1"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=6.14"
   }
 }
