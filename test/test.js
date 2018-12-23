@@ -70,7 +70,7 @@ test('it tries multiple keys in order', (t) => {
   t.end()
 })
 
-test.only('ensure breaks for an invalid type', (t) => {
+test('ensure breaks for an invalid type', (t) => {
   t.throws(() => {
     env.ensure([{}])
   }, 'Invalid key [object Object]')
@@ -192,7 +192,7 @@ test('ensure string exequalsts', t => {
 })
 
 test('ensure object type equals correct', t => {
-  let result = env.ensure({'FOO': { type: 'string' }})
+  let result = env.ensure({ 'FOO': { type: 'string' } })
   t.equals(true, result)
   t.end()
 })
@@ -245,7 +245,7 @@ test('ensure validator function throws for invalid values', t => {
 
 test('ensure throws at first failure', t => {
   t.throws(
-    () => env.ensure({'FOO': { type: 'boolean' }}, 'INT_NUM'),
+    () => env.ensure({ 'FOO': { type: 'boolean' } }, 'INT_NUM'),
     'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
   )
   t.end()
