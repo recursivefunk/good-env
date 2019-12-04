@@ -116,7 +116,7 @@ module.exports = Object
             console.log('triggered boolean')
             return { validator: is.boolean, getter: self.getBool.bind(self) }
           default:
-            console.log(`i thould throw\n`)
+            console.log('i thould throw\n')
             throw Error(`Invalid type "${item}"`)
         }
       }
@@ -206,13 +206,9 @@ module.exports = Object
      *
      */
     getNumber (key, defaultVal) {
-      let value
-      let intVal
-      let valIsInt
-
-      value = this.get(key, defaultVal)
-      intVal = parseInt(value, 10)
-      valIsInt = is.integer(intVal)
+      const value = this.get(key, defaultVal)
+      const intVal = parseInt(value, 10)
+      const valIsInt = is.integer(intVal)
 
       if (value === defaultVal) {
         return value
@@ -239,9 +235,7 @@ module.exports = Object
      */
     getList (key, opts = { dilim: ',', cast: null }) {
       const { dilim, cast } = opts
-      let value
-
-      value = this.get(key, [])
+      const value = this.get(key, [])
 
       if (!is.array(value)) {
         let ret = value.split(dilim).map(i => i.trim())
