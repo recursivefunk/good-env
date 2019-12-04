@@ -9,7 +9,7 @@ declare module "good-env" {
    * already exist
    *
    */
-  export declare const get: (keyObj: any, defaultVal?: any) => any;
+  export const get: (keyObj: any, defaultVal?: any) => any;
   /**
    * @description Determines whether or not all of the values given key is
    * truthy
@@ -17,7 +17,7 @@ declare module "good-env" {
    * @param {(string|string[])} keys - A unique key or array of keys
    *
    */
-  export declare const ok: (...keys: any[]) => boolean;
+  export const ok: (...keys: any[]) => boolean;
   /**
    * @description Gets all items specified in the object. If the item is an
    * array, the function will perform a standard get with no defaults. If the
@@ -27,7 +27,7 @@ declare module "good-env" {
    * @param {string[]} items - An array of keys
    *
    */
-  export declare const getAll: (items: any) => any;
+  export const getAll: (items: any) => any;
   /**
    * @description This method ensures 1 to many environment variables either
    * exist, or exist and are of a designated type
@@ -45,7 +45,7 @@ declare module "good-env" {
    * )
    *
    */
-  export declare const ensure: (...items: any[]) => boolean;
+  export const ensure: (...items: any[]) => boolean;
   /**
    * @description Fetches the value at the given key and attempts to coerce
    * it into a boolean
@@ -54,7 +54,7 @@ declare module "good-env" {
    * @param {boolean} defaultVal - The default value
    *
    */
-  export declare const getBool: (key: any, defaultVal?: any) => any;
+  export const getBool: (key: any, defaultVal?: any) => any;
   /**
    * @description An alias function for getBool()
    *
@@ -62,7 +62,7 @@ declare module "good-env" {
    * @param {boolean} defaultVal - The default value if none exists
    *
    */
-  export declare const bool: (key: any, defaultVal?: any) => any;
+  export const bool: (key: any, defaultVal?: any) => any;
   /**
    * @description Fetches the value at the given key and attempts to
    * coherse it into an integer
@@ -71,12 +71,12 @@ declare module "good-env" {
    * @param {number} defaultVal - The default value
    *
    */
-  export declare const getNumber: (key: any, defaultVal?: any) => any;
+  export const getNumber: (key: any, defaultVal?: any) => any;
   /**
    * @description An alias function for getNumber()
    *
    */
-  export declare const num: (key: any, defaultVal?: any) => any;
+  export const num: (key: any, defaultVal?: any) => any;
   /**
    * @description Fetches the value at the given key and attempts to
    * coherse it into a list of literal values
@@ -85,7 +85,7 @@ declare module "good-env" {
    * @param {object} options
    *
    */
-  export declare const getList: (
+  export const getList: (
     key: any,
     opts?: {
       dilim: string;
@@ -99,5 +99,5 @@ declare module "good-env" {
    * @param {object} options
    *
    */
-  export declare const list: (key: any, opts: any) => any;
+  export const list: (key: any, opts: any) => any;
 }
