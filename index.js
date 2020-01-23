@@ -199,7 +199,7 @@ module.exports = Object
 
     /**
      * @description Fetches the value at the given key and attempts to
-     * coherse it into an integer
+     * coerce it into an integer
      *
      * @param {string} key - A unique key
      * @param {number} defaultVal - The default value
@@ -227,7 +227,7 @@ module.exports = Object
 
     /**
      * @description Fetches the value at the given key and attempts to
-     * coherse it into a list of literal values
+     * coerce it into a list of literal values
      *
      * @param {string} key - A unique key
      * @param {object} options
