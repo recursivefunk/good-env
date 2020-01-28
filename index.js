@@ -158,6 +158,13 @@ module.exports = Object
     },
 
     /**
+     * An alias for .ensure()
+     */
+    assert (...items) {
+      return this.ensure(...items);
+    },
+
+    /**
      * @description Fetches the value at the given key and attempts to coerce
      * it into a boolean
      *
