@@ -161,7 +161,7 @@ module.exports = Object
      * An alias for .ensure()
      */
     assert (...items) {
-      return this.ensure(...items);
+      return this.ensure(...items)
     },
 
     /**

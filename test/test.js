@@ -188,7 +188,7 @@ test('ensure string exequalsts', t => {
   let result = env.ensure('FOO')
   t.equals(true, result)
 
-  result = env.assert('FOO');
+  result = env.assert('FOO')
   t.equals(true, result)
 
   t.throws(
