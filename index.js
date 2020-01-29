@@ -107,16 +107,12 @@ module.exports = Object
       const getKit = item => {
         switch (item) {
           case 'string':
-            console.log('triggered string')
             return { validator: is.string, getter: self.get.bind(self) }
           case 'number':
-            console.log('triggered number')
             return { validator: is.number, getter: self.getNumber.bind(self) }
           case 'boolean':
-            console.log('triggered boolean')
             return { validator: is.boolean, getter: self.getBool.bind(self) }
           default:
-            console.log('i thould throw\n')
             throw Error(`Invalid type "${item}"`)
         }
       }
@@ -155,6 +151,13 @@ module.exports = Object
           throw Error(`Invalid key ${item}`)
         }
       })
+    },
+
+    /**
+     * An alias for .ensure()
+     */
+    assert (...items) {
+      return this.ensure(...items)
     },
 
     /**

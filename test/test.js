@@ -70,9 +70,12 @@ test('it tries multiple keys in order', (t) => {
   t.end()
 })
 
-test('ensure breaks for an invalid type', (t) => {
+test('ensure/assert breaks for an invalid type', (t) => {
   t.throws(() => {
     env.ensure([{}])
+  }, 'Invalid key [object Object]')
+  t.throws(() => {
+    env.assert([{}])
   }, 'Invalid key [object Object]')
   t.end()
 })
@@ -182,17 +185,28 @@ function equalsNum (i) {
 }
 
 test('ensure string exequalsts', t => {
-  const result = env.ensure('FOO')
+  let result = env.ensure('FOO')
   t.equals(true, result)
+
+  result = env.assert('FOO')
+  t.equals(true, result)
+
   t.throws(
     () => env.ensure('NOPE'),
+    'No environment configuration for var "NOPE"'
+  )
+  t.throws(
+    () => env.assert('NOPE'),
     'No environment configuration for var "NOPE"'
   )
   t.end()
 })
 
 test('ensure object type equals correct', t => {
-  const result = env.ensure({ FOO: { type: 'string' } })
+  let result = env.ensure({ FOO: { type: 'string' } })
+  t.equals(true, result)
+
+  result = env.assert({ FOO: { type: 'string' } })
   t.equals(true, result)
   t.end()
 })
@@ -200,6 +214,10 @@ test('ensure object type equals correct', t => {
 test('ensure mequalssing env throws', t => {
   t.throws(
     () => env.ensure({ NOPE: { type: 'number' } }),
+    'Unexpected result for key="NOPE". It may not exequalst or may not be a valid "number"'
+  )
+  t.throws(
+    () => env.assert({ NOPE: { type: 'number' } }),
     'Unexpected result for key="NOPE". It may not exequalst or may not be a valid "number"'
   )
   t.end()
@@ -210,11 +228,18 @@ test('ensure invalid env type throws', t => {
     () => env.ensure({ FOO: { type: 'number' } }),
     'Unexpected result for key="FOO". It may not exequalst or may not be a valid "number"'
   )
+  t.throws(
+    () => env.assert({ FOO: { type: 'number' } }),
+    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "number"'
+  )
   t.end()
 })
 
 test('ensure various envs are correct', t => {
-  const result = env.ensure('FOO', { INT_NUM: { type: 'number' } })
+  let result = env.ensure('FOO', { INT_NUM: { type: 'number' } })
+  t.equals(true, result)
+
+  result = env.assert('FOO', { INT_NUM: { type: 'number' } })
   t.equals(true, result)
   t.end()
 })
@@ -225,7 +250,10 @@ test('ensure validator function returns true for valid values', t => {
     type: 'number',
     ok
   }
-  const result = env.ensure({ INT_NUM: spec })
+  let result = env.ensure({ INT_NUM: spec })
+  t.equals(true, result)
+
+  result = env.assert({ INT_NUM: spec })
   t.equals(true, result)
   t.end()
 })
@@ -240,12 +268,20 @@ test('ensure validator function throws for invalid values', t => {
     () => env.ensure({ INT_NUM: spec }),
     'Value 10 did not pass validator function for key "INT_NUM"'
   )
+  t.throws(
+    () => env.assert({ INT_NUM: spec }),
+    'Value 10 did not pass validator function for key "INT_NUM"'
+  )
   t.end()
 })
 
 test('ensure throws at first failure', t => {
   t.throws(
     () => env.ensure({ FOO: { type: 'boolean' } }, 'INT_NUM'),
+    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+  )
+  t.throws(
+    () => env.assert({ FOO: { type: 'boolean' } }, 'INT_NUM'),
     'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
   )
   t.end()
