@@ -104,13 +104,13 @@ env.ok('FOO', 'BAR') // true
 env.ok('FOO', 'BAR', 'NOT_SET') // false
 ```
 
-Use `.ensure(item1, item2...)` to check the existence and/or type of a few items at once
-Note: If any variable passed to `ensure()` doesn't exist or is otherwise
-invalid, an error will be thrown
+Use `.assert(item1, item2...)` to check the existence and/or type of a few items at once
+Note: If any variable passed to `assert()` doesn't exist or is otherwise
+invalid, an error will be thrown.
 
 ```javascirpt
 
-env.ensure(
+env.assert(
     // Will ensure 'HOSTNAME' exists
     'HOSTNAME',
     
