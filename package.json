@@ -1,6 +1,6 @@
 {
   "name": "good-env",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,8 @@
   "author": "Johnny Ray Austin <johnny@johnnyray.me>",
   "license": "MIT",
   "dependencies": {
-    "is_js": "^0.9.0"
+    "is_js": "^0.9.0",
+    "minimist": "1.2.2"
   },
   "devDependencies": {
     "dotenv": "8.2.0",
