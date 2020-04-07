@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "is_js": "^0.9.0",
-    "minimist": "1.2.2"
+    "minimist": "1.2.3"
   },
   "devDependencies": {
     "dotenv": "8.2.0",
