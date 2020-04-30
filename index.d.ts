@@ -47,6 +47,10 @@ declare module "good-env" {
    */
   export const ensure: (...items: any[]) => boolean;
   /**
+   * An alias for .ensure()
+   */
+  export const assert: (...items: any[]) => boolean;
+  /**
    * @description Fetches the value at the given key and attempts to coerce
    * it into a boolean
    *
