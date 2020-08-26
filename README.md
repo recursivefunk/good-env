@@ -5,6 +5,10 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
+`good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
+about raw strings is OK for some things but for non-trivial applications, booleans, numbers, lists or even
+the existence (or non-existence) of environment configurations can play a key role in how an application behaves.
+
 ```
 $ npm install good-env --save
 ```
@@ -34,7 +38,7 @@ Using `good-env`
 
 ```javascript
 const env = require('good-env')
-env.getInt('FOO') // 10
+env.getNumber('FOO') // 10
 env.getBool('A_TRUE_VAL') // true
 env.getBool('A_FALSE_VAL') // false
 ```
@@ -49,9 +53,11 @@ Batch Gets
 
 ```javascript
 env.getAll(['SECRET', 'HOST']) // ['shhh', 'localhost']
+
 // defaults work here too
 env.getAll({
-  A_SECRET: 'lolz', HOST: null // null means no default
+  A_SECRET: 'lolz', 
+  HOST: null // null means no default
 }) // { A_SECRET: 'lolz', HOST: 'localhost' }
 ```
 
@@ -75,7 +81,7 @@ env.getList('LIST') // ['foo', 'bar', 'bang']
 env.getList('LIST_NOT_SET') // []
 ```
 
-Integer Lists
+Number Lists
 
 ```
 $ export LIST=1,2,3
@@ -83,18 +89,7 @@ $ export LIST=1,2,3
 
 ```javascript
 process.env.LIST // '1,2,3'
-env.list('LIST', { cast: 'int' }) // [1, 2, 3]
-```
-
-Float Lists
-
-```
-$ export LIST=1.3,2.5,3.6
-```
-
-```javascript
-process.env.LIST // '1.3,2.5,3.6'
-env.list('LIST', { cast: 'float' }) // [1.3, 2.2, 3.6]
+env.list('LIST', { cast: 'number' }) // [1, 2, 3]
 ```
 
 Sometimes you just need to know if something exists
@@ -102,13 +97,38 @@ Sometimes you just need to know if something exists
 ```javascript
 env.ok('NOT_SET') // false
 env.ok('FOO') // true
->
+
+// works with multiple arguments.
+// Returns true if ALL keys exist
+env.ok('FOO', 'BAR') // true
+env.ok('FOO', 'BAR', 'NOT_SET') // false
+```
+
+Use `.assert(item1, item2...)` to check the existence and/or type of a few items at once
+Note: If any variable passed to `assert()` doesn't exist or is otherwise
+invalid, an error will be thrown.
+
+```javascirpt
+
+env.assert(
+    // Will ensure 'HOSTNAME' exists
+    'HOSTNAME',
+    
+    // Will ensure 'PORT' both exists and is a number
+    { 'PORT': { type: 'number' }},
+    
+    // Will ensure 'INTERVAL' exists, it's a number and its value is greater
+    // than or equal to 1000
+    { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
+    
+    // ... any number of arguments
+)
 ```
 
 ## Shortcut Methods
 
 ```javascript
-env.int() ==> env.getInt()
+env.num() ==> env.getNumber()
 env.bool() ==> env.getBool()
 env.list() ==> env.getList()
 ```

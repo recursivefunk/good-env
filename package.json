@@ -1,37 +1,57 @@
 {
   "name": "good-env",
-  "version": "1.5.8",
-  "description": "Sensible environment variable parsing for node",
+  "version": "5.1.4",
+  "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --lines 100 ava",
-    "lint": "eslint test/ index.js"
+    "test": "nyc --check-coverage --lines 85 node test/test.js",
+    "lint": "eslint test/ index.js",
+    "ci": "eslint test/ index.js && nyc --check-coverage --lines 85 node test/test.js"
   },
   "keywords": [
     "environment",
     "environment-variables",
     "environment variables",
     "server",
-    "env"
+    "env",
+    "twelve-factor",
+    "twelve factor",
+    "12-factor",
+    "12 factor"
   ],
   "author": "Johnny Ray Austin <johnny@johnnyray.me>",
   "license": "MIT",
   "dependencies": {
-    "is_js": "^0.8.0",
-    "stampit": "^2.1.2"
+    "is_js": "^0.9.0",
+    "minimist": "1.2.3"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
-    "dotenv": "^2.0.0",
-    "eslint": "^3.19.0",
-    "eslint-config-standard": "^10.2.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^4.2.2",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "nyc": "^10.1.2"
+    "dotenv": "8.2.0",
+    "eslint": "6.7.2",
+    "eslint-config-standard": "14.1.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-node": "10.0.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.0.1",
+    "nyc": "14.1.1",
+    "tape": "4.11.0"
   },
   "engines": {
-    "node": ">=4"
-  }
+    "node": ">=8.16.2"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/recursivefunk/good-env.git"
+  },
+  "bugs": {
+    "url": "https://github.com/recursivefunk/good-env/issues"
+  },
+  "homepage": "https://github.com/recursivefunk/good-env#readme"
 }

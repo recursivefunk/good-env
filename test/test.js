@@ -1,157 +1,288 @@
-'use strict'
 
 require('dotenv').config({ path: 'test/test.env' })
 
-const test = require('ava')
+const test = require('tape')
 const env = require('../index')
 
-test('it fetches existing env', (t) => {
+test('it fetches exequalsting env', (t) => {
   const result = env.get('FOO')
-  t.is(result, 'bar')
+  t.equals(result, 'bar')
+  t.end()
 })
 
-test('it checks existence', (t) => {
+test('it checks exequalstence', (t) => {
   let result = env.ok('FOO')
-  t.is(result, true)
+  t.equals(result, true)
   result = env.ok('NOPE')
-  t.is(result, false)
+  t.equals(result, false)
+  t.end()
+})
+
+test('it checks exequalstence of every item', (t) => {
+  // 'FOO' and 'BANG' both exequalst - expect true
+  let result = env.ok('FOO', 'BANG')
+  t.equals(result, true)
+  result = null
+  // 'BEEZ' does not exequalst - expect false
+  result = env.ok('BEEZ', 'FOO')
+  t.equals(result, false)
+  t.end()
 })
 
 test('it gets all items', (t) => {
   let result = env.getAll(['FOO', 'BANG'])
-  t.is(result.FOO, 'bar')
-  t.is(result.BANG, 'boop')
+  t.equals(result.FOO, 'bar')
+  t.equals(result.BANG, 'boop')
   t.throws(() => env.getAll('nope'), 'Invalid arg nope')
 
   result = env.getAll({ FOO: null, BAR: 'boop', BZZ: 'bang' })
-  t.is(result.FOO, 'bar')
-  t.is(result.BAR, 'boop')
-  t.is(result.BZZ, 'bang')
+  t.equals(result.FOO, 'bar')
+  t.equals(result.BAR, 'boop')
+  t.equals(result.BZZ, 'bang')
+  t.end()
 })
 
-test('it returns default val for non-existing env', (t) => {
+test('it returns default val for non-exequalsting env', (t) => {
   const result = env.get('BANG', 'boop')
-  t.is(result, 'boop')
+  t.equals(result, 'boop')
+  t.end()
 })
 
 test('it tries multiple keys in order', (t) => {
   let result = env.get('BOOZ')
-  // ensure first that BOOZ is not an environment variable
-  t.falsy(result)
-  // ensure we recognize the last item in the array as the existing env var
+  // ensure first that BOOZ equals not an environment variable
+  t.notOk(result)
+  // ensure we recognize the last item in the array as the exequalsting env var
   result = env.get(['BOOZ', 'FOO'])
-  t.is(result, 'bar')
+  t.equals(result, 'bar')
   result = null
-  // ensure we recognize the first item in the array as the existing env var
+  // ensure we recognize the first item in the array as the exequalsting env var
   result = env.get(['FOO', 'BOOZ'])
-  t.is(result, 'bar')
+  t.equals(result, 'bar')
   result = null
-  // ensure we recognize a middle item in the array as the existing env var
+  // ensure we recognize a middle item in the array as the exequalsting env var
   result = env.get(['BOOZ', 'FOO', 'ZAP'])
-  t.is(result, 'bar')
+  t.equals(result, 'bar')
   result = null
   result = env.get(['BOOZ', 'ZOOP'])
-  // ensure a falsy result for no existing env vars
-  t.falsy(result)
+  // ensure a falsy result for no exequalsting env vars
+  t.notOk(result)
+  t.end()
+})
+
+test('ensure/assert breaks for an invalid type', (t) => {
+  t.throws(() => {
+    env.ensure([{}])
+  }, 'Invalid key [object Object]')
+  t.throws(() => {
+    env.assert([{}])
+  }, 'Invalid key [object Object]')
+  t.end()
 })
 
 test('it breaks for invalid keys', (t) => {
   t.throws(() => {
     env.get({ foo: 'bar' })
   }, 'Invalid key(s) [object Object]')
+  t.end()
 })
 
 test('returns integers', (t) => {
-  let result = env.getInt('INT_NUM')
-  t.is(result, 10)
+  let result = env.getNumber('INT_NUM')
+  t.equals(result, 10)
   result = null
-  result = env.int('INT_NUM')
-  t.is(result, 10)
+  result = env.num('INT_NUM')
+  t.equals(result, 10)
   result = null
-  result = env.int(['INTT', 'INT_NUM'])
-  t.is(result, 10)
+  result = env.num(['INTT', 'INT_NUM'])
+  t.equals(result, 10)
   result = null
-  result = env.int(['INTT', 'INT_NUM', 'INNTT'])
-  t.is(result, 10)
+  result = env.num(['INTT', 'INT_NUM', 'INNTT'])
+  t.equals(result, 10)
+  t.end()
 })
 
-test('returns undefined for non-existing number', (t) => {
-  const result = env.getInt('INT_NOT_HERE')
-  t.is(undefined, result)
+test('returns undefined for non-exequalsting number', (t) => {
+  const result = env.getNumber('INT_NOT_HERE')
+  t.equals(undefined, result)
+  t.end()
 })
 
-test('returns undefined for existing non-number', (t) => {
-  const result = env.getInt('FOO')
-  t.is(undefined, result)
+test('returns undefined for exequalsting non-number', (t) => {
+  const result = env.getNumber('FOO')
+  t.equals(undefined, result)
+  t.end()
 })
 
 test('returns a list of values', (t) => {
   let result = env.getList('MY_LIST')
-  t.is(result.length, 3)
-  t.is(result[0], 'foo')
+  t.equals(result.length, 3)
+  t.equals(result[0], 'foo')
   // test shortcut
   result = null
-  result = env.list('MY_LIST')
-  t.is(result.length, 3)
-  t.is(result[0], 'foo')
+  result = env.getList('MY_LIST')
+  t.equals(result.length, 3)
+  t.equals(result[0], 'foo')
+  t.end()
 })
 
-test('returns empty list for non-existy', (t) => {
-  let result = env.getList('MY_LIST_NOT_HERE')
-  t.is(result.length, 0)
+test('returns empty lequalst for non-exequalsty', (t) => {
+  const result = env.getList('MY_LIST_NOT_HERE')
+  t.equals(result.length, 0)
+  t.end()
 })
 
-test('parses int list', (t) => {
-  let result = env.getList('MY_INT_LIST', { cast: 'int' })
-  result.forEach((i) => t.is(isInt(i), true))
-})
-
-test('parses float list', (t) => {
-  let result = env.getList('MY_FLOAT_LIST', { cast: 'float' })
-  result.forEach((i) => t.is(isFloat(i), true))
+test('parses int lequalst', (t) => {
+  const result = env.getList('MY_INT_LIST', { cast: 'number' })
+  result.forEach((i) => t.equals(equalsNum(i), true))
+  t.end()
 })
 
 test('returns true for true', (t) => {
   let result = env.getBool('MY_TRUE_KEY')
-  t.is(result, true)
+  t.equals(result, true)
   result = env.getBool('MY_UPPER_TRUE_KEY')
-  t.is(result, true)
+  t.equals(result, true)
   result = null
   // Test shortcut version
   result = env.bool('MY_UPPER_TRUE_KEY')
-  t.is(result, true)
+  t.equals(result, true)
+  t.end()
 })
 
 test('returns false for false', (t) => {
   let result = env.getBool('MY_FALSE_KEY')
-  t.is(result, false)
+  t.equals(result, false)
   result = env.getBool('MY_UPPER_FALSE_KEY')
-  t.is(result, false)
+  t.equals(result, false)
+  t.end()
 })
 
 test('returns default bool:true', (t) => {
   let result = env.getBool('BOOL_NOT_SET', true)
-  t.is(result, true)
+  t.equals(result, true)
   result = env.getBool('BOOL_NOT_SET', false)
-  t.is(result, false)
+  t.equals(result, false)
   result = env.getBool('BOOL_NOT_SET')
-  t.is(result, false)
+  t.equals(result, false)
+  t.end()
 })
 
 test('parses values with leading whitespace', (t) => {
-  let result = env.get('LEADING_WHITESPACE')
-  t.is(result, 'val')
+  const result = env.get('LEADING_WHITESPACE')
+  t.equals(result, 'val')
+  t.end()
 })
 
 test('parses values with trailing whitespace', (t) => {
-  let result = env.get('TRAILING_WHITESPACE')
-  t.is(result, 'val')
+  const result = env.get('TRAILING_WHITESPACE')
+  t.equals(result, 'val')
+  t.end()
 })
 
-function isInt (i) {
+function equalsNum (i) {
   return Number(i) === i && i % 1 === 0
 }
 
-function isFloat (i) {
-  return Number(i) === i && i % 1 !== 0
-}
+test('ensure string exequalsts', t => {
+  let result = env.ensure('FOO')
+  t.equals(true, result)
+
+  result = env.assert('FOO')
+  t.equals(true, result)
+
+  t.throws(
+    () => env.ensure('NOPE'),
+    'No environment configuration for var "NOPE"'
+  )
+  t.throws(
+    () => env.assert('NOPE'),
+    'No environment configuration for var "NOPE"'
+  )
+  t.end()
+})
+
+test('ensure object type equals correct', t => {
+  let result = env.ensure({ FOO: { type: 'string' } })
+  t.equals(true, result)
+
+  result = env.assert({ FOO: { type: 'string' } })
+  t.equals(true, result)
+  t.end()
+})
+
+test('ensure mequalssing env throws', t => {
+  t.throws(
+    () => env.ensure({ NOPE: { type: 'number' } }),
+    'Unexpected result for key="NOPE". It may not exequalst or may not be a valid "number"'
+  )
+  t.throws(
+    () => env.assert({ NOPE: { type: 'number' } }),
+    'Unexpected result for key="NOPE". It may not exequalst or may not be a valid "number"'
+  )
+  t.end()
+})
+
+test('ensure invalid env type throws', t => {
+  t.throws(
+    () => env.ensure({ FOO: { type: 'number' } }),
+    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "number"'
+  )
+  t.throws(
+    () => env.assert({ FOO: { type: 'number' } }),
+    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "number"'
+  )
+  t.end()
+})
+
+test('ensure various envs are correct', t => {
+  let result = env.ensure('FOO', { INT_NUM: { type: 'number' } })
+  t.equals(true, result)
+
+  result = env.assert('FOO', { INT_NUM: { type: 'number' } })
+  t.equals(true, result)
+  t.end()
+})
+
+test('ensure validator function returns true for valid values', t => {
+  const ok = num => num % 2 === 0
+  const spec = {
+    type: 'number',
+    ok
+  }
+  let result = env.ensure({ INT_NUM: spec })
+  t.equals(true, result)
+
+  result = env.assert({ INT_NUM: spec })
+  t.equals(true, result)
+  t.end()
+})
+
+test('ensure validator function throws for invalid values', t => {
+  const ok = num => num % 2 === 1
+  const spec = {
+    type: 'number',
+    ok
+  }
+  t.throws(
+    () => env.ensure({ INT_NUM: spec }),
+    'Value 10 did not pass validator function for key "INT_NUM"'
+  )
+  t.throws(
+    () => env.assert({ INT_NUM: spec }),
+    'Value 10 did not pass validator function for key "INT_NUM"'
+  )
+  t.end()
+})
+
+test('ensure throws at first failure', t => {
+  t.throws(
+    () => env.ensure({ FOO: { type: 'boolean' } }, 'INT_NUM'),
+    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+  )
+  t.throws(
+    () => env.assert({ FOO: { type: 'boolean' } }, 'INT_NUM'),
+    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+  )
+  t.end()
+})

@@ -1,15 +1,17 @@
-'use strict'
 
 const is = require('is_js')
-const component = require('stampit')
 const ok = is.existy
 
-const Env = component()
-  .methods({
+module.exports = Object
+  .create({
     /**
      * @description Fetches the env var with the given key. If no env var
      * with the specified key exists, the default value is returned if it is
      * provided else it returns undefined
+     *
+     * @param {(string|string[])} keyObj - A unique key for an item or a list of possible keys
+     * @param {(string|number)} defaultVal - The default value of an item if it doesn't
+     * already exist
      *
      */
     get (keyObj, defaultVal) {
@@ -24,7 +26,7 @@ const Env = component()
         throw Error(`Invalid key(s) ${keyObj}`)
       }
 
-      keys.some((key) => {
+      keys.some(key => {
         if (ok(process.env[key])) {
           value = process.env[key]
           return true
@@ -46,47 +48,124 @@ const Env = component()
     * item is an object {}, the function will use the values as defaults -
     * null values will be treated as no default specified
     *
+    * @param {string[]} items - An array of keys
     *
     */
     getAll (items) {
-      const self = this
-      if (is.array(items)) {
-        return arrReducer(items)
-      } else if (is.json(items)) {
-        return objReducer(items)
-      } else {
-        throw Error(`Invalid arg ${items}`)
-      }
-
-      function objReducer (obj) {
-        return Object.keys(obj).reduce((prev, next, index) => {
-          const val = self.get(next, obj[next])
-          prev[next] = val
+      const objReducer = (obj, getter) => (
+        Object.keys(obj).reduce((prev, next, index) => {
+          prev[next] = getter(next, obj[next])
           return prev
         }, {})
-      }
+      )
 
-      function arrReducer (keys) {
-        const arr = items.map((key) => self.get(key))
+      const arrReducer = (keys, getter) => {
+        const arr = items.map(key => getter(key))
         return arr.reduce((prev, next, index) => {
           prev[keys[index]] = arr[index]
           return prev
         }, {})
       }
+
+      if (is.array(items)) {
+        return arrReducer(items, this.get)
+      } else if (is.json(items)) {
+        return objReducer(items, this.get)
+      } else {
+        throw Error(`Invalid arg ${items}`)
+      }
     },
 
     /**
-     * @description Determines whether or not the value at the given key is
+     * @description Determines whether or not all of the values given key is
      * truthy
      *
+     * @param {(string|string[])} keys - A unique key or array of keys
+     *
      */
-    ok (key) {
-      return ok(process.env[key])
+    ok: (...keys) => keys.every(key => ok(process.env[key])),
+
+    /**
+     * @description This method ensures 1 to many environment variables either
+     * exist, or exist and are of a designated type
+     *
+     * @example
+     * ensure(
+     *  // Will ensure 'HOSTNAME' exists
+     *  'HOSTNAME',
+     *  // Will ensure 'PORT' both exists and is a number
+     *  { 'PORT': { type: 'number' }},
+     *  // Will ensure 'INTERVAL' exists, it's a number and its value is greater
+     *  // than or equal to 1000
+     *  { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
+     *  // ...
+     * )
+     *
+     */
+    ensure (...items) {
+      const self = this
+      const getKit = item => {
+        switch (item) {
+          case 'string':
+            return { validator: is.string, getter: self.get.bind(self) }
+          case 'number':
+            return { validator: is.number, getter: self.getNumber.bind(self) }
+          case 'boolean':
+            return { validator: is.boolean, getter: self.getBool.bind(self) }
+          default:
+            throw Error(`Invalid type "${item}"`)
+        }
+      }
+
+      return items.every(item => {
+        if (is.string(item)) {
+          if (this.ok(item)) {
+            return true
+          } else {
+            throw Error(`No environment configuration for var "${item}"`)
+          }
+        } else if (is.json(item)) {
+          const key = Object.keys(item)[0]
+          const type = item[key].type
+          const validator = item[key].ok
+
+          if (type && !validType(type)) {
+            throw Error(`Invalid expected type "${type}"`)
+          } else {
+            const kit = getKit(type)
+            const val = kit.getter(key)
+            const result = kit.validator(val)
+            if (!result) {
+              throw Error(`Unexpected result for key="${key}". It may not exist or may not be a valid "${type}"`)
+            }
+
+            if (validator && is.function(validator)) {
+              const valid = validator(val)
+              if (!valid) {
+                throw Error(`Value ${val} did not pass validator function for key "${key}"`)
+              }
+            }
+            return true
+          }
+        } else {
+          throw Error(`Invalid key ${item}`)
+        }
+      })
     },
 
     /**
-     * @description Fetches the value at the given key and attempts to
-     * coerce it into a boolean
+     * An alias for .ensure()
+     */
+    assert (...items) {
+      return this.ensure(...items)
+    },
+
+    /**
+     * @description Fetches the value at the given key and attempts to coerce
+     * it into a boolean
+     *
+     * @param {string} key - A unique key
+     * @param {boolean} defaultVal - The default value
      *
      */
     getBool (key, defaultVal) {
@@ -113,6 +192,9 @@ const Env = component()
     /**
      * @description An alias function for getBool()
      *
+     * @param {string} key - A unique key
+     * @param {boolean} defaultVal - The default value if none exists
+     *
      */
     bool (key, defaultVal) {
       return this.getBool(key, defaultVal)
@@ -120,17 +202,16 @@ const Env = component()
 
     /**
      * @description Fetches the value at the given key and attempts to
-     * coherse it into an integer
+     * coerce it into an integer
+     *
+     * @param {string} key - A unique key
+     * @param {number} defaultVal - The default value
      *
      */
-    getInt (key, defaultVal) {
-      let value
-      let intVal
-      let valIsInt
-
-      value = this.get(key, defaultVal)
-      intVal = parseInt(value, 10)
-      valIsInt = is.integer(intVal)
+    getNumber (key, defaultVal) {
+      const value = this.get(key, defaultVal)
+      const intVal = parseInt(value, 10)
+      const valIsInt = is.integer(intVal)
 
       if (value === defaultVal) {
         return value
@@ -140,31 +221,29 @@ const Env = component()
     },
 
     /**
-     * @description An alias function for getInt()
+     * @description An alias function for getNumber()
      *
      */
-    int (key, defaultVal) {
-      return this.getInt(key, defaultVal)
+    num (key, defaultVal) {
+      return this.getNumber(key, defaultVal)
     },
 
     /**
      * @description Fetches the value at the given key and attempts to
-     * coherse it into a list of literal values
+     * coerce it into a list of literal values
+     *
+     * @param {string} key - A unique key
+     * @param {object} options
      *
      */
-    getList (key, opts) {
-      opts = opts || {}
-      let value
-
-      value = this.get(key, [])
+    getList (key, opts = { dilim: ',', cast: null }) {
+      const { dilim, cast } = opts
+      const value = this.get(key, [])
 
       if (!is.array(value)) {
-        const dilim = opts.dilim || ','
         let ret = value.split(dilim).map(i => i.trim())
-        if (opts.cast === 'int') {
-          ret = mapInts(ret)
-        } else if (opts.cast === 'float') {
-          ret = mapFloats(ret)
+        if (cast && cast === 'number') {
+          ret = mapNums(ret)
         }
         return ret
       } else {
@@ -175,19 +254,15 @@ const Env = component()
     /**
      * @description An alias function for getList()
      *
+     * @param {string} key - A unique key
+     * @param {object} options
+     *
      */
     list (key, opts) {
-      opts = opts || {}
       return this.getList(key, opts)
     }
   })
 
-module.exports = Env.create()
-
-function mapFloats (items) {
-  return items.map((t) => parseFloat(t, 10))
-}
-
-function mapInts (items) {
-  return items.map((t) => parseInt(t, 10))
-}
+const parse = (items, converter) => items.map(t => converter(t, 10))
+const mapNums = items => parse(items, parseInt)
+const validType = item => ['number', 'boolean', 'string'].includes(item)
