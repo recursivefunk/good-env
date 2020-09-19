@@ -59,16 +59,10 @@ module.exports = Object
         }, {})
       )
 
-      const arrReducer = (keys, getter) => {
-        const arr = items.map(key => getter(key))
-        return arr.reduce((prev, next, index) => {
-          prev[keys[index]] = arr[index]
-          return prev
-        }, {})
-      }
+      const arrMapper = (keys, getter) => items.map(key => getter(key))
 
       if (is.array(items)) {
-        return arrReducer(items, this.get)
+        return arrMapper(items, this.get)
       } else if (is.json(items)) {
         return objReducer(items, this.get)
       } else {
