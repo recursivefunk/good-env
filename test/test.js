@@ -33,7 +33,7 @@ test('it gets all items', (t) => {
   let result = env.getAll(['FOO', 'BANG', 'BZP'])
   t.equals(result[0], 'bar')
   t.equals(result[1], 'boop')
-  t.notOk(result[2], 'Nonexisting value');
+  t.notOk(result[2], 'Nonexisting value')
   t.throws(() => env.getAll('nope'), 'Invalid arg nope')
 
   result = env.getAll({ FOO: null, BAR: 'boop', BZZ: 'bang' })
