@@ -1,6 +1,11 @@
 
-const is = require('is_js')
-const ok = is.existy
+const ok = x => !!x
+const isArray = Array.isArray
+const isString = x => Object.prototype.toString.call(x) === '[object String]'
+const isNumber = x => Object.prototype.toString.call(x) === '[object Number]'
+const isBoolean = x => Object.prototype.toString.call(x) === '[object Boolean]'
+const isObject = x => Object.prototype.toString.call(x) === '[object Object]'
+const isFunction = x => Object.prototype.toString.call(x) === '[object Function]'
 
 module.exports = Object
   .create({
@@ -18,9 +23,9 @@ module.exports = Object
       let keys
       let value
 
-      if (is.string(keyObj)) {
+      if (isString(keyObj)) {
         keys = [keyObj]
-      } else if (is.array(keyObj)) {
+      } else if (isArray(keyObj)) {
         keys = keyObj.map(k => k.trim())
       } else {
         throw Error(`Invalid key(s) ${keyObj}`)
@@ -31,13 +36,14 @@ module.exports = Object
           value = process.env[key]
           return true
         }
+        return false
       })
 
       if (!ok(value) && typeof ok(defaultVal)) {
         value = defaultVal
       }
 
-      value = (is.string(value)) ? value.trim() : value
+      value = (isString(value)) ? value.trim() : value
 
       return value
     },
@@ -61,9 +67,9 @@ module.exports = Object
 
       const arrMapper = (keys, getter) => items.map(key => getter(key))
 
-      if (is.array(items)) {
+      if (isArray(items)) {
         return arrMapper(items, this.get)
-      } else if (is.json(items)) {
+      } else if (isObject(items)) {
         return objReducer(items, this.get)
       } else {
         throw Error(`Invalid arg ${items}`)
@@ -101,28 +107,30 @@ module.exports = Object
       const getKit = item => {
         switch (item) {
           case 'string':
-            return { validator: is.string, getter: self.get.bind(self) }
+            return { validator: isString, getter: self.get.bind(self) }
           case 'number':
-            return { validator: is.number, getter: self.getNumber.bind(self) }
+            return { validator: isNumber, getter: self.getNumber.bind(self) }
           case 'boolean':
-            return { validator: is.boolean, getter: self.getBool.bind(self) }
+            return { validator: isBoolean, getter: self.getBool.bind(self) }
+          /* istanbul ignore next */
           default:
             throw Error(`Invalid type "${item}"`)
         }
       }
 
       return items.every(item => {
-        if (is.string(item)) {
+        if (isString(item)) {
           if (this.ok(item)) {
             return true
           } else {
             throw Error(`No environment configuration for var "${item}"`)
           }
-        } else if (is.json(item)) {
+        } else if (isObject(item)) {
           const key = Object.keys(item)[0]
           const type = item[key].type
           const validator = item[key].ok
 
+          /* istanbul ignore if */
           if (type && !validType(type)) {
             throw Error(`Invalid expected type "${type}"`)
           } else {
@@ -133,7 +141,7 @@ module.exports = Object
               throw Error(`Unexpected result for key="${key}". It may not exist or may not be a valid "${type}"`)
             }
 
-            if (validator && is.function(validator)) {
+            if (validator && isFunction(validator)) {
               const valid = validator(val)
               if (!valid) {
                 throw Error(`Value ${val} did not pass validator function for key "${key}"`)
@@ -205,7 +213,7 @@ module.exports = Object
     getNumber (key, defaultVal) {
       const value = this.get(key, defaultVal)
       const intVal = parseInt(value, 10)
-      const valIsInt = is.integer(intVal)
+      const valIsInt = Number.isInteger(intVal)
 
       if (value === defaultVal) {
         return value
@@ -234,7 +242,7 @@ module.exports = Object
       const { dilim, cast } = opts
       const value = this.get(key, [])
 
-      if (!is.array(value)) {
+      if (!isArray(value)) {
         let ret = value.split(dilim).map(i => i.trim())
         if (cast && cast === 'number') {
           ret = mapNums(ret)
