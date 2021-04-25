@@ -4,13 +4,13 @@ require('dotenv').config({ path: 'test/test.env' })
 const test = require('tape')
 const env = require('../index')
 
-test('it fetches exequalsting env', (t) => {
+test('it fetches existing env', (t) => {
   const result = env.get('FOO')
   t.equals(result, 'bar')
   t.end()
 })
 
-test('it checks exequalstence', (t) => {
+test('it checks non-existence', (t) => {
   let result = env.ok('FOO')
   t.equals(result, true)
   result = env.ok('NOPE')
@@ -18,7 +18,7 @@ test('it checks exequalstence', (t) => {
   t.end()
 })
 
-test('it checks exequalstence of every item', (t) => {
+test('it checks existence of every item', (t) => {
   // 'FOO' and 'BANG' both exequalst - expect true
   let result = env.ok('FOO', 'BANG')
   t.equals(result, true)
@@ -121,7 +121,7 @@ test('returns a list of values', (t) => {
   t.equals(result[0], 'foo')
   // test shortcut
   result = null
-  result = env.getList('MY_LIST')
+  result = env.list('MY_LIST')
   t.equals(result.length, 3)
   t.equals(result[0], 'foo')
   t.end()
