@@ -36,6 +36,7 @@ module.exports = Object
           value = process.env[key]
           return true
         }
+        return false
       })
 
       if (!ok(value) && typeof ok(defaultVal)) {
