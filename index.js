@@ -6,6 +6,9 @@ const isNumber = x => Object.prototype.toString.call(x) === '[object Number]'
 const isBoolean = x => Object.prototype.toString.call(x) === '[object Boolean]'
 const isObject = x => Object.prototype.toString.call(x) === '[object Object]'
 const isFunction = x => Object.prototype.toString.call(x) === '[object Function]'
+const parse = (items, converter) => items.map(t => converter(t, 10))
+const mapNums = items => parse(items, parseInt)
+const validType = item => ['number', 'boolean', 'string'].includes(item)
 
 module.exports = Object
   .create({
@@ -264,7 +267,3 @@ module.exports = Object
       return this.getList(key, opts)
     }
   })
-
-const parse = (items, converter) => items.map(t => converter(t, 10))
-const mapNums = items => parse(items, parseInt)
-const validType = item => ['number', 'boolean', 'string'].includes(item)
