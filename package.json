@@ -1,6 +1,6 @@
 {
   "name": "good-env",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "eslint-plugin-promise": "5.1.0",
     "eslint-plugin-standard": "5.0.0",
     "nyc": "15.1.0",
-    "tape": "5.2.2"
+    "tape": "5.3.1"
   },
   "engines": {
     "node": ">=10.18.0"
