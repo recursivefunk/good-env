@@ -1,11 +1,12 @@
 
 const ok = x => !!x
 const isArray = Array.isArray
-const isString = x => Object.prototype.toString.call(x) === '[object String]'
-const isNumber = x => Object.prototype.toString.call(x) === '[object Number]'
-const isBoolean = x => Object.prototype.toString.call(x) === '[object Boolean]'
-const isObject = x => Object.prototype.toString.call(x) === '[object Object]'
-const isFunction = x => Object.prototype.toString.call(x) === '[object Function]'
+const is = x => Object.prototype.toString.call(x)
+const isString = x => is(x) === '[object String]'
+const isNumber = x => is(x) === '[object Number]'
+const isBoolean = x => is(x) === '[object Boolean]'
+const isObject = x => is(x) === '[object Object]'
+const isFunction = x => is(x) === '[object Function]'
 const parse = (items, converter) => items.map(t => converter(t, 10))
 const mapNums = items => parse(items, parseInt)
 const validType = item => ['number', 'boolean', 'string'].includes(item)
