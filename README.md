@@ -43,6 +43,16 @@ env.getBool('A_TRUE_VAL') // true
 env.getBool('A_FALSE_VAL') // false
 ```
 
+> **Warning**
+> Checking the _existence_ of a boolean value which resolves to `false` will return `true` because `ok()` doesn't give you a value.
+
+```
+export A_BOOL_VAL=false
+```
+```javascript
+env.ok('A_BOOL_VAL') // true
+```
+
 Specify defaults
 
 ```javascript
