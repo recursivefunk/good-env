@@ -7,7 +7,7 @@
 
 `good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
 about raw strings is OK for some things but for non-trivial applications, booleans, numbers, lists or even
-the existence (or non-existence) of environment configurations can play a key role in how an application behaves.
+the existence (or non-existence) of environment configurations can play a key role in how an application behaves. Lastly, `good-env` has no production dependencies.
 
 ```
 $ npm install good-env --save
