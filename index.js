@@ -47,9 +47,7 @@ module.exports = Object
         value = defaultVal
       }
 
-      value = (isString(value)) ? value.trim() : value
-
-      return value
+      return (isString(value)) ? value.trim() : value
     },
 
     /**
@@ -180,14 +178,13 @@ module.exports = Object
       value = process.env[key]
 
       if (ok(value)) {
-        let ret
         value = value.toLowerCase().trim()
         if (value === 'true') {
-          ret = true
+          return true
         } else if (value === 'false') {
-          ret = false
+          return false
         }
-        return ret
+        throw new Error(`${value} is not a boolean`)
       } else if (defaultVal === true || defaultVal === false) {
         return defaultVal
       }

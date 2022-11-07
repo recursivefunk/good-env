@@ -103,7 +103,7 @@ test('returns integers', (t) => {
   t.end()
 })
 
-test('returns undefined for non-exequalsting number', (t) => {
+test.only('returns undefined for non-exequalsting number', (t) => {
   const result = env.getNumber('INT_NOT_HERE')
   t.equals(undefined, result)
   t.end()
@@ -279,11 +279,11 @@ test('ensure validator function throws for invalid values', t => {
 test('ensure throws at first failure', t => {
   t.throws(
     () => env.ensure({ FOO: { type: 'boolean' } }, 'INT_NUM'),
-    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+    'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"'
   )
   t.throws(
     () => env.assert({ FOO: { type: 'boolean' } }, 'INT_NUM'),
-    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+    'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"'
   )
   t.end()
 })
