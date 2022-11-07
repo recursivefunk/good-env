@@ -279,11 +279,11 @@ test('ensure validator function throws for invalid values', t => {
 test('ensure throws at first failure', t => {
   t.throws(
     () => env.ensure({ FOO: { type: 'boolean' } }, 'INT_NUM'),
-    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+    'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"'
   )
   t.throws(
     () => env.assert({ FOO: { type: 'boolean' } }, 'INT_NUM'),
-    'Unexpected result for key="FOO". It may not exequalst or may not be a valid "boolean"'
+    'Unexpected result for key="FOO". It may not exist or may not be a valid "boolean"'
   )
   t.end()
 })
