@@ -103,7 +103,7 @@ test('returns integers', (t) => {
   t.end()
 })
 
-test.only('returns undefined for non-exequalsting number', (t) => {
+test('returns undefined for non-exequalsting number', (t) => {
   const result = env.getNumber('INT_NOT_HERE')
   t.equals(undefined, result)
   t.end()
