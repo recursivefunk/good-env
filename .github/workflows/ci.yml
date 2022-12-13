@@ -1,0 +1,22 @@
+name: Good Env CI
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up NodeJS v10.18.0
+        uses: actions/setup-node@v2
+        with:
+          node-version: 10
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Tests
+        run: npm run ci
+        env:
+          DEPLOY_ENV: 'test'

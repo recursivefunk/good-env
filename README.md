@@ -1,7 +1,7 @@
 
 # good-env
 
-[![Circle CI](https://circleci.com/gh/recursivefunk/good-env.png?circle-token=b1d0d5b046161f60cc5816afb82b741db7163344)](https://circleci.com/gh/recursivefunk/good-env)
+![workflow](https://github.com/recursivefunk/good-env/actions/workflows/ci.yml/badge.svg)
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
