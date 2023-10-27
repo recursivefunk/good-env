@@ -2,11 +2,11 @@
   "name": "good-env",
   "version": "6.2.2",
   "description": "Better environment variable handling for Twelve-Factor node apps",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "nyc --check-coverage --lines 100 node test/test.js",
-    "lint": "eslint test/ index.js",
-    "ci": "eslint test/ index.js && nyc --check-coverage --lines 100 node test/test.js"
+    "lint": "eslint test/ src/index.js",
+    "ci": "eslint test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js"
   },
   "keywords": [
     "environment",
