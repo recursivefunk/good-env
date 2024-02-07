@@ -118,7 +118,7 @@ Use `.assert(item1, item2...)` to check the existence and/or type of a few items
 Note: If any variable passed to `assert()` doesn't exist or is otherwise
 invalid, an error will be thrown.
 
-```javascirpt
+```javascript
 
 env.assert(
     // Will ensure 'HOSTNAME' exists
