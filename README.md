@@ -181,6 +181,8 @@ Fetch `URL` objects from url strings
   */
 ```
 
+Why would one use `env.getUrl()` if one just wishes to grab the url string value? The best reason to use `getUrl()` and grab the `origin` property is that `env.get()` doesn't care about the format of the value. Using `getUrl()` will ensure the url is properly formatted and return a `null` value if it isn't. In practice, having an _invalid_ url is the same as having no value at all. Then again, it's your code. Do what you want!
+
 ## Shortcut Methods
 
 ```javascript
