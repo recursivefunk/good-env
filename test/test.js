@@ -4,6 +4,33 @@ require('dotenv').config({ path: 'test/test.env' })
 const test = require('tape')
 const env = require('../src/index')
 
+test('it parses a valid url', (t) => {
+  const result = env.getUrl('ENDPOINT')
+  const { origin } = result
+  t.equals(origin, 'https://foo.com')
+  t.end()
+})
+
+test('it gracefully fails to parse a non-existing url', (t) => {
+  const result = env.getUrl('FAKE_ENDPOINT')
+  t.notOk(result, 'URL doesn\'t exist')
+  t.end()
+})
+
+test('it returns a default url', (t) => {
+  const result = env.getUrl('FAKE_ENDPOINT', 'https://localhost:3000')
+  const { origin } = result
+  t.equals(origin, 'https://localhost:3000')
+  t.end()
+})
+
+test('shortcut works', (t) => {
+  const result = env.url('ENDPOINT')
+  const { origin } = result
+  t.equals(origin, 'https://foo.com')
+  t.end()
+})
+
 test('it fetches existing env', (t) => {
   const result = env.get('FOO')
   t.equals(result, 'bar')

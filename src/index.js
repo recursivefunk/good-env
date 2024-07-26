@@ -1,4 +1,4 @@
-
+const { URL } = require('node:url');
 const ok = x => !!x
 const isArray = Array.isArray
 const is = x => Object.prototype.toString.call(x)
@@ -13,6 +13,40 @@ const validType = item => ['number', 'boolean', 'string'].includes(item)
 
 module.exports = Object
   .create({
+    /**
+     * @description Finds the URL string in the environment associated with the given key. If
+     * it's found, the function tries to construct a URL object. If the URL is invalid, return null.
+     * If the URL is valid, return the URL object. If the key is not found and a default value is
+     * passed, we try to construct a URL using the default value. If anything goes wrong with the
+     * construction of the URL, return null.
+     *
+     * @param {string} key - A unique key that points to the URL
+     * @param {string} defaultVal - The default URL to be used if the key isn't found
+     * @returns {object}
+     */
+    getUrl (key, defaultVal) {
+      let urlStr = this.get(key, defaultVal)
+
+      if (urlStr === defaultVal) {
+        urlStr = defaultVal
+      }
+
+      try {
+        const url = new URL(urlStr)
+        return url
+      } catch (e) {
+        return null
+      }
+    },
+
+    /**
+     * @description This is the shortcut function for the getUrl function
+     * @returns {object}
+     */
+    url (key, defaultVal) {
+      return this.getUrl(key, defaultVal)
+    },
+
     /**
      * @description Fetches the env var with the given key. If no env var
      * with the specified key exists, the default value is returned if it is

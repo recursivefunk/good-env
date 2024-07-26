@@ -5,6 +5,8 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
+🚨 v18.20.4 requires Node version 16.20.2 or higher! 🚨
+
 `good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
 about raw strings is OK for some things but for non-trivial applications, booleans, numbers, lists or even
 the existence (or non-existence) of environment configurations can play a key role in how an application behaves. Lastly, `good-env` has no production dependencies.
@@ -22,6 +24,7 @@ $ export FOO=10
 $ export A_TRUE_VAL=true
 $ export A_FALSE_VAL=false
 $ export LIST=foo,bar,bang
+$ export ENDPOINT=https://foo.com
 $ node
 > process.env.FOO
 '10'
@@ -135,10 +138,54 @@ env.assert(
 )
 ```
 
+Fetch `URL` objects from url strings
+
+```javascript
+  env.getUrl('ENDPOINT')
+  /*
+  URL {
+    href: 'https://foo.com/',
+    origin: 'https://foo.com',
+    protocol: 'https:',
+    username: '',
+    password: '',
+    host: 'foo.com',
+    hostname: 'foo.com',
+    port: '',
+    pathname: '/',
+    search: '',
+    searchParams: URLSearchParams {},
+    hash: ''
+  }  
+  */
+
+  env.getUrl('FAKE_ENDPOINT') // null
+
+  // It works with defaults
+  env.getUrl('FAKE_ENDPOINT', 'http://localhost:3000')
+  /*
+  URL {
+    href: 'http://localhost:3000/',
+    origin: 'http://localhost:3000',
+    protocol: 'http:',
+    username: '',
+    password: '',
+    host: 'localhost:3000',
+    hostname: 'localhost',
+    port: '3000',
+    pathname: '/',
+    search: '',
+    searchParams: URLSearchParams {},
+    hash: ''
+  }
+  */
+```
+
 ## Shortcut Methods
 
 ```javascript
 env.num() ==> env.getNumber()
 env.bool() ==> env.getBool()
 env.list() ==> env.getList()
+env.url() ==> env.getUrl()
 ```

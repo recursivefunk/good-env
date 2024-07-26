@@ -1,12 +1,12 @@
 {
   "name": "good-env",
-  "version": "6.2.3",
+  "version": "7.0.0",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "src/index.js",
   "scripts": {
     "test": "nyc --check-coverage --lines 100 node test/test.js",
-    "lint": "eslint test/ src/index.js",
-    "ci": "eslint test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js"
+    "lint": "test/ src/index.js",
+    "ci": "test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js"
   },
   "keywords": [
     "environment",
@@ -21,19 +21,8 @@
   ],
   "author": "Johnny Ray Austin <stuff@johnny.email>",
   "license": "MIT",
-  "devDependencies": {
-    "dotenv": "16.0.0",
-    "eslint": "7.25.0",
-    "eslint-config-standard": "16.0.2",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.1.0",
-    "eslint-plugin-standard": "5.0.0",
-    "nyc": "15.1.0",
-    "tape": "5.5.3"
-  },
   "engines": {
-    "node": ">=10.18.0"
+    "node": ">=18.20.4"
   },
   "files": [
     "index.js",
@@ -49,5 +38,10 @@
   "bugs": {
     "url": "https://github.com/recursivefunk/good-env/issues"
   },
-  "homepage": "https://github.com/recursivefunk/good-env#readme"
+  "homepage": "https://github.com/recursivefunk/good-env#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "nyc": "15.1.0",
+    "tape": "5.5.3"
+  }
 }
