@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up NodeJS v10
+      - name: Set up NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: 18.20.4
