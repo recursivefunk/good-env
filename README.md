@@ -3,7 +3,7 @@
 
 ![workflow](https://github.com/recursivefunk/good-env/actions/workflows/ci.yml/badge.svg)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
+[![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)
 
 🚨 v18.20.4 requires Node version 16.20.2 or higher! 🚨
 

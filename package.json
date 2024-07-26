@@ -5,8 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "nyc --check-coverage --lines 100 node test/test.js",
-    "lint": "test/ src/index.js",
-    "ci": "test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js"
+    "lint": "semistandard test/ src/index.js",
+    "ci": "semistandard test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js",
+    "format": "semistandard --fix test/ src/index.js"
   },
   "keywords": [
     "environment",
@@ -42,6 +43,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "nyc": "15.1.0",
-    "tape": "5.5.3"
+    "tape": "5.5.3",
+    "semistandard": "*"
   }
 }
