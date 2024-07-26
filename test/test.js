@@ -5,8 +5,8 @@ const env = require('../src/index');
 
 test('it parses a valid url', (t) => {
   const result = env.getUrl('ENDPOINT');
-  const { origin } = result;
-  t.equals(origin, 'https://foo.com');
+  const { href } = result;
+  t.equals(href, 'https://foo.com/');
   t.end();
 });
 
@@ -18,15 +18,15 @@ test('it gracefully fails to parse a non-existing url', (t) => {
 
 test('it returns a default url', (t) => {
   const result = env.getUrl('FAKE_ENDPOINT', 'https://localhost:3000');
-  const { origin } = result;
-  t.equals(origin, 'https://localhost:3000');
+  const { href } = result;
+  t.equals(href, 'https://localhost:3000/');
   t.end();
 });
 
 test('shortcut works', (t) => {
   const result = env.url('ENDPOINT');
-  const { origin } = result;
-  t.equals(origin, 'https://foo.com');
+  const { href } = result;
+  t.equals(href, 'https://foo.com/');
   t.end();
 });
 
@@ -41,6 +41,14 @@ test('it checks non-existence', (t) => {
   t.equals(result, true);
   result = env.ok('NOPE');
   t.equals(result, false);
+  t.end();
+});
+
+test('it parses a valid redis url', (t) => {
+  const urlStr = 'redis://user:password@ipaddress:6379/0';
+  const result = env.getUrl('REDIS_ENDPOINT');
+  const { href } = result;
+  t.equals(href, urlStr);
   t.end();
 });
 
