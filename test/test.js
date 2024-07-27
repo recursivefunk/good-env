@@ -6,7 +6,7 @@ const test = require('tape');
 const env = require('../src/index');
 
 test('it parses a valid url', (t) => {
-  const { httpOk, href, raw } = env.getUrl('ENDPOINT');
+  const { httpOk, href } = env.getUrl('ENDPOINT');
   t.equals(href, 'https://foo.com/');
   t.equals(httpOk, true);
   t.end();
