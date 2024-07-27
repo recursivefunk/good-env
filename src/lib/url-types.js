@@ -5,7 +5,6 @@ function httpUrl({ url }) {
     httpOk: true,
     redisOk: false,
     pgOk: false,
-    secure: url.protocol.startsWith('https') ? true : false,
     href: url.href,
     raw: url,
   });
@@ -16,7 +15,16 @@ function redisUrl({ url }) {
     redisOk: true,
     httpOk: false,
     pgOk: false,
-    secure: url.protocol.startsWith('rediss') ? true : false,
+    href: url.href,
+    raw: url,
+  });
+}
+
+function pgUrl({ url }) {
+  return Object.freeze({
+    pgOk: true,
+    redisOk: false,
+    httpOk: false,
     href: url.href,
     raw: url,
   });
@@ -25,9 +33,13 @@ function redisUrl({ url }) {
 function makeGoodUrl({ url }) {
   if (url.protocol.startsWith('redis')) {
     return redisUrl({ url });
-  } else {
+  } else if (url.protocol.startsWith('postgresql')) {
+    return pgUrl({ url });
+  } else if (url.protocol.startsWith('http')) {
     return httpUrl({ url });
   }
+
+  return null;
 }
 
 module.exports = { makeGoodUrl };

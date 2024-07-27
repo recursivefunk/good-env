@@ -6,7 +6,7 @@ const test = require('tape');
 const env = require('../src/index');
 
 test('it parses a valid url', (t) => {
-  const { httpOk, href } = env.getUrl('ENDPOINT');
+  const { httpOk, href, raw } = env.getUrl('ENDPOINT');
   t.equals(href, 'https://foo.com/');
   t.equals(httpOk, true);
   t.end();
@@ -47,12 +47,13 @@ test('it checks non-existence', (t) => {
 test('it parses a valid redis url', (t) => {
   const urlStr = 'redis://user:password@ipaddress:6379/0';
   const result = env.getUrl('REDIS_ENDPOINT');
-  const { href, username, password, protocol, redisOK } = result;
+  const { href, username, password, protocol, redisOk } = result.raw;
+
   t.equals(href, urlStr);
   t.equals(username, 'user');
   t.equals(password, 'password');
   t.equals(protocol, 'redis:');
-  t.equals(redisOK, true);
+  t.equals(result.redisOk, true);
   t.end();
 });
 
