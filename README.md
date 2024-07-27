@@ -5,7 +5,7 @@
 
 [![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)
 
-🚨 v18.20.4 requires Node version 16.20.2 or higher! 🚨
+🚨 v7 requires Node version 18.20.4 or higher! 🚨
 
 `good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
 about raw strings is OK for some things but for non-trivial applications, booleans, numbers, lists or even
