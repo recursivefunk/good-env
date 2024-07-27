@@ -3,7 +3,9 @@
 
 ![workflow](https://github.com/recursivefunk/good-env/actions/workflows/ci.yml/badge.svg)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
+[![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)
+
+🚨 v18.20.4 requires Node version 16.20.2 or higher! 🚨
 
 `good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
 about raw strings is OK for some things but for non-trivial applications, booleans, numbers, lists or even
@@ -22,6 +24,7 @@ $ export FOO=10
 $ export A_TRUE_VAL=true
 $ export A_FALSE_VAL=false
 $ export LIST=foo,bar,bang
+$ export ENDPOINT=https://foo.com
 $ node
 > process.env.FOO
 '10'
@@ -135,10 +138,68 @@ env.assert(
 )
 ```
 
+Fetch `URL` objects from url strings
+
+```javascript
+  env.getUrl('ENDPOINT')
+  /*
+  {
+    httpOk: true,
+    href: 'https://foo.com/',
+    raw: URL {
+      href: 'https://foo.com/',
+      origin: 'https://foo.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'foo.com',
+      hostname: 'foo.com',
+      port: '',
+      pathname: '/',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    }  
+  }
+  */
+
+  env.getUrl('FAKE_ENDPOINT') // null
+
+  // It works with defaults
+  env.getUrl('FAKE_ENDPOINT', 'http://localhost:3000')
+  /*
+  {
+    httpOk: true,
+    href: 'http://localhost:3000/',
+    raw: URL {
+      href: 'http://localhost:3000/',
+      origin: 'http://localhost:3000',
+      protocol: 'http:',
+      username: '',
+      password: '',
+      host: 'localhost:3000',
+      hostname: 'localhost',
+      port: '3000',
+      pathname: '/',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    }
+  }
+  */
+```
+
+### About URLs
+
+Why would one use `env.getUrl()` if one just wishes to grab the url string value? The best reason to use `getUrl()` and grab the `href` property is that `env.get()` doesn't care about the format of the value. Using `getUrl()` will ensure the url is properly formatted and return a `null` value if it isn't. In practice, having an _invalid_ url is the same as having no value at all. Then again, it's your code. Do what you want!
+
+As of now, `http`, `redis` and `postgresql` are the only supported protocols. Other protocols will return `null`. I'm not against adding new protocol support, but these are the ones that seemed most obvious to me. If you want other protocols supported, I'd recommend making a PR. You may create an issue, but I can't guarantee when I'll get around to implementation.
+
 ## Shortcut Methods
 
 ```javascript
 env.num() ==> env.getNumber()
 env.bool() ==> env.getBool()
 env.list() ==> env.getList()
+env.url() ==> env.getUrl()
 ```

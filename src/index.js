@@ -1,18 +1,54 @@
+'use strict';
 
-const ok = x => !!x
-const isArray = Array.isArray
-const is = x => Object.prototype.toString.call(x)
-const isString = x => is(x) === '[object String]'
-const isNumber = x => is(x) === '[object Number]'
-const isBoolean = x => is(x) === '[object Boolean]'
-const isObject = x => is(x) === '[object Object]'
-const isFunction = x => is(x) === '[object Function]'
-const parse = (items, converter) => items.map(t => converter(t, 10))
-const mapNums = items => parse(items, parseInt)
-const validType = item => ['number', 'boolean', 'string'].includes(item)
+const { URL } = require('node:url');
+const { makeGoodUrl } = require('./lib/url-types');
+const ok = x => !!x;
+const isArray = Array.isArray;
+const is = x => Object.prototype.toString.call(x);
+const isString = x => is(x) === '[object String]';
+const isNumber = x => is(x) === '[object Number]';
+const isBoolean = x => is(x) === '[object Boolean]';
+const isObject = x => is(x) === '[object Object]';
+const isFunction = x => is(x) === '[object Function]';
+const parse = (items, converter) => items.map(t => converter(t, 10));
+const mapNums = items => parse(items, parseInt);
+const validType = item => ['number', 'boolean', 'string'].includes(item);
 
 module.exports = Object
   .create({
+    /**
+     * @description Finds the URL string in the environment associated with the given key. If
+     * it's found, the function tries to construct a URL object. If the URL is invalid, return null.
+     * If the URL is valid, return the URL object. If the key is not found and a default value is
+     * passed, we try to construct a URL using the default value. If anything goes wrong with the
+     * construction of the URL, return null.
+     *
+     * @param {string} key - A unique key that points to the URL
+     * @param {string} defaultVal - The default URL to be used if the key isn't found
+     * @returns {object}
+     */
+    getUrl (key, defaultVal) {
+      let urlStr = this.get(key, defaultVal);
+
+      if (urlStr === defaultVal) {
+        urlStr = defaultVal;
+      }
+
+      try {
+        return makeGoodUrl({ url: new URL(urlStr) });
+      } catch (e) {
+        return null;
+      }
+    },
+
+    /**
+     * @description This is the shortcut function for the getUrl function
+     * @returns {object}
+     */
+    url (key, defaultVal) {
+      return this.getUrl(key, defaultVal);
+    },
+
     /**
      * @description Fetches the env var with the given key. If no env var
      * with the specified key exists, the default value is returned if it is
@@ -24,30 +60,30 @@ module.exports = Object
      *
      */
     get (keyObj, defaultVal) {
-      let keys
-      let value
+      let keys;
+      let value;
 
       if (isString(keyObj)) {
-        keys = [keyObj]
+        keys = [keyObj];
       } else if (isArray(keyObj)) {
-        keys = keyObj.map(k => k.trim())
+        keys = keyObj.map(k => k.trim());
       } else {
-        throw Error(`Invalid key(s) ${keyObj}`)
+        throw Error(`Invalid key(s) ${keyObj}`);
       }
 
       keys.some(key => {
         if (ok(process.env[key])) {
-          value = process.env[key]
-          return true
+          value = process.env[key];
+          return true;
         }
-        return false
-      })
+        return false;
+      });
 
       if (!ok(value) && typeof ok(defaultVal)) {
-        value = defaultVal
+        value = defaultVal;
       }
 
-      return (isString(value)) ? value.trim() : value
+      return (isString(value)) ? value.trim() : value;
     },
 
     /**
@@ -62,19 +98,19 @@ module.exports = Object
     getAll (items) {
       const objReducer = (obj, getter) => (
         Object.keys(obj).reduce((prev, next, index) => {
-          prev[next] = getter(next, obj[next])
-          return prev
+          prev[next] = getter(next, obj[next]);
+          return prev;
         }, {})
-      )
+      );
 
-      const arrMapper = (keys, getter) => items.map(key => getter(key))
+      const arrMapper = (keys, getter) => items.map(key => getter(key));
 
       if (isArray(items)) {
-        return arrMapper(items, this.get)
+        return arrMapper(items, this.get);
       } else if (isObject(items)) {
-        return objReducer(items, this.get)
+        return objReducer(items, this.get);
       } else {
-        throw Error(`Invalid arg ${items}`)
+        throw Error(`Invalid arg ${items}`);
       }
     },
 
@@ -105,63 +141,63 @@ module.exports = Object
      *
      */
     ensure (...items) {
-      const self = this
+      const self = this;
       const getKit = item => {
         switch (item) {
           case 'string':
-            return { validator: isString, getter: self.get.bind(self) }
+            return { validator: isString, getter: self.get.bind(self) };
           case 'number':
-            return { validator: isNumber, getter: self.getNumber.bind(self) }
+            return { validator: isNumber, getter: self.getNumber.bind(self) };
           case 'boolean':
-            return { validator: isBoolean, getter: self.getBool.bind(self) }
+            return { validator: isBoolean, getter: self.getBool.bind(self) };
           /* istanbul ignore next */
           default:
-            throw Error(`Invalid type "${item}"`)
+            throw Error(`Invalid type "${item}"`);
         }
-      }
+      };
 
       return items.every(item => {
         if (isString(item)) {
           if (this.ok(item)) {
-            return true
+            return true;
           } else {
-            throw Error(`No environment configuration for var "${item}"`)
+            throw Error(`No environment configuration for var "${item}"`);
           }
         } else if (isObject(item)) {
-          const key = Object.keys(item)[0]
-          const type = item[key].type
-          const validator = item[key].ok
+          const key = Object.keys(item)[0];
+          const type = item[key].type;
+          const validator = item[key].ok;
 
           /* istanbul ignore if */
           if (type && !validType(type)) {
-            throw Error(`Invalid expected type "${type}"`)
+            throw Error(`Invalid expected type "${type}"`);
           } else {
-            const kit = getKit(type)
-            const val = kit.getter(key)
-            const result = kit.validator(val)
+            const kit = getKit(type);
+            const val = kit.getter(key);
+            const result = kit.validator(val);
             if (!result) {
-              throw Error(`Unexpected result for key="${key}". It may not exist or may not be a valid "${type}"`)
+              throw Error(`Unexpected result for key="${key}". It may not exist or may not be a valid "${type}"`);
             }
 
             if (validator && isFunction(validator)) {
-              const valid = validator(val)
+              const valid = validator(val);
               if (!valid) {
-                throw Error(`Value ${val} did not pass validator function for key "${key}"`)
+                throw Error(`Value ${val} did not pass validator function for key "${key}"`);
               }
             }
-            return true
+            return true;
           }
         } else {
-          throw Error(`Invalid key ${item}`)
+          throw Error(`Invalid key ${item}`);
         }
-      })
+      });
     },
 
     /**
      * An alias for .ensure()
      */
     assert (...items) {
-      return this.ensure(...items)
+      return this.ensure(...items);
     },
 
     /**
@@ -173,23 +209,23 @@ module.exports = Object
      *
      */
     getBool (key, defaultVal) {
-      let value
+      let value;
 
-      value = process.env[key]
+      value = process.env[key];
 
       if (ok(value)) {
-        value = value.toLowerCase().trim()
+        value = value.toLowerCase().trim();
         if (value === 'true') {
-          return true
+          return true;
         } else if (value === 'false') {
-          return false
+          return false;
         }
-        throw new Error(`${value} is not a boolean`)
+        throw new Error(`${value} is not a boolean`);
       } else if (defaultVal === true || defaultVal === false) {
-        return defaultVal
+        return defaultVal;
       }
 
-      return false
+      return false;
     },
 
     /**
@@ -200,7 +236,7 @@ module.exports = Object
      *
      */
     bool (key, defaultVal) {
-      return this.getBool(key, defaultVal)
+      return this.getBool(key, defaultVal);
     },
 
     /**
@@ -212,14 +248,14 @@ module.exports = Object
      *
      */
     getNumber (key, defaultVal) {
-      const value = this.get(key, defaultVal)
-      const intVal = parseInt(value, 10)
-      const valIsInt = Number.isInteger(intVal)
+      const value = this.get(key, defaultVal);
+      const intVal = parseInt(value, 10);
+      const valIsInt = Number.isInteger(intVal);
 
       if (value === defaultVal) {
-        return value
+        return value;
       } else if (valIsInt) {
-        return intVal
+        return intVal;
       }
     },
 
@@ -228,7 +264,7 @@ module.exports = Object
      *
      */
     num (key, defaultVal) {
-      return this.getNumber(key, defaultVal)
+      return this.getNumber(key, defaultVal);
     },
 
     /**
@@ -240,17 +276,17 @@ module.exports = Object
      *
      */
     getList (key, opts = { dilim: ',', cast: null }) {
-      const { dilim, cast } = opts
-      const value = this.get(key, [])
+      const { dilim, cast } = opts;
+      const value = this.get(key, []);
 
       if (!isArray(value)) {
-        let ret = value.split(dilim).map(i => i.trim())
+        let ret = value.split(dilim).map(i => i.trim());
         if (cast && cast === 'number') {
-          ret = mapNums(ret)
+          ret = mapNums(ret);
         }
-        return ret
+        return ret;
       } else {
-        return value
+        return value;
       }
     },
 
@@ -262,6 +298,6 @@ module.exports = Object
      *
      */
     list (key, opts) {
-      return this.getList(key, opts)
+      return this.getList(key, opts);
     }
-  })
+  });

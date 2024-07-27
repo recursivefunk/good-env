@@ -1,5 +1,22 @@
 declare module "good-env" {
   /**
+   * @description Finds the URL string in the environment associated with the given key. If
+   * it's found, the function tries to construct a URL object. If the URL is invalid, return null.
+   * If the URL is valid, return the URL object. If the key is not found and a default value is
+   * passed, we try to construct a URL using the default value. If anything goes wrong with the
+   * construction of the URL, return null.
+   *
+   * @param {string} key - A unique key that points to the URL
+   * @param {string} defaultVal - The default URL to be used if the key isn't found
+   * @returns {object}
+   */
+  export const getUrl: (key: string, defaultVal?: string) => any;
+  /**
+   * @description This is the shortcut function for the getUrl function
+   * @returns {object}
+   */
+  export const url: (key: string, defaultVal?: string) => any;
+  /**
    * @description Fetches the env var with the given key. If no env var
    * with the specified key exists, the default value is returned if it is
    * provided else it returns undefined
