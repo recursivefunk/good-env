@@ -1,4 +1,7 @@
+'use strict';
+
 const { URL } = require('node:url');
+const { makeGoodUrl } = require('./lib/url-types');
 const ok = x => !!x;
 const isArray = Array.isArray;
 const is = x => Object.prototype.toString.call(x);
@@ -32,8 +35,7 @@ module.exports = Object
       }
 
       try {
-        const url = new URL(urlStr);
-        return url;
+        return makeGoodUrl({ url: new URL(urlStr) });
       } catch (e) {
         return null;
       }

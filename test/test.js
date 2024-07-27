@@ -1,12 +1,14 @@
+'use strict';
+
 require('dotenv').config({ path: 'test/test.env' });
 
 const test = require('tape');
 const env = require('../src/index');
 
 test('it parses a valid url', (t) => {
-  const result = env.getUrl('ENDPOINT');
-  const { href } = result;
+  const { httpOk, href } = env.getUrl('ENDPOINT');
   t.equals(href, 'https://foo.com/');
+  t.equals(httpOk, true);
   t.end();
 });
 
@@ -17,15 +19,13 @@ test('it gracefully fails to parse a non-existing url', (t) => {
 });
 
 test('it returns a default url', (t) => {
-  const result = env.getUrl('FAKE_ENDPOINT', 'https://localhost:3000');
-  const { href } = result;
+  const { href } = env.getUrl('FAKE_ENDPOINT', 'https://localhost:3000');
   t.equals(href, 'https://localhost:3000/');
   t.end();
 });
 
 test('shortcut works', (t) => {
-  const result = env.url('ENDPOINT');
-  const { href } = result;
+  const { href } = env.url('ENDPOINT');
   t.equals(href, 'https://foo.com/');
   t.end();
 });
@@ -47,8 +47,12 @@ test('it checks non-existence', (t) => {
 test('it parses a valid redis url', (t) => {
   const urlStr = 'redis://user:password@ipaddress:6379/0';
   const result = env.getUrl('REDIS_ENDPOINT');
-  const { href } = result;
+  const { href, username, password, protocol, redisOK } = result;
   t.equals(href, urlStr);
+  t.equals(username, 'user');
+  t.equals(password, 'password');
+  t.equals(protocol, 'redis:');
+  t.equals(redisOK, true);
   t.end();
 });
 
