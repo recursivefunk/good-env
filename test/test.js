@@ -44,16 +44,35 @@ test('it checks non-existence', (t) => {
   t.end();
 });
 
+test('it returns null for an unsupported protocol', (t) => {
+  const result = env.getUrl('UNSUPPORTED_URL');
+  t.notOk(result);
+  t.end();
+});
+
 test('it parses a valid redis url', (t) => {
   const urlStr = 'redis://user:password@ipaddress:6379/0';
-  const result = env.getUrl('REDIS_ENDPOINT');
-  const { href, username, password, protocol, redisOk } = result.raw;
+  const result = env.getUrl('REDIS_URL');
+  const { href, username, password, protocol } = result.raw;
 
   t.equals(href, urlStr);
   t.equals(username, 'user');
   t.equals(password, 'password');
   t.equals(protocol, 'redis:');
   t.equals(result.redisOk, true);
+  t.end();
+});
+
+test('it parses a valid postgres url', (t) => {
+  const urlStr = 'postgresql://user:password@localhost/otherdb?connect_timeout=10&application_name=myapp';
+  const result = env.getUrl('POSTGRES_URL');
+  const { href, username, password, protocol } = result.raw;
+
+  t.equals(href, urlStr);
+  t.equals(username, 'user');
+  t.equals(password, 'password');
+  t.equals(protocol, 'postgresql:');
+  t.equals(result.pgOk, true);
   t.end();
 });
 
