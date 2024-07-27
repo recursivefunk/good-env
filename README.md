@@ -143,20 +143,24 @@ Fetch `URL` objects from url strings
 ```javascript
   env.getUrl('ENDPOINT')
   /*
-  URL {
+  {
+    httpOk: true,
     href: 'https://foo.com/',
-    origin: 'https://foo.com',
-    protocol: 'https:',
-    username: '',
-    password: '',
-    host: 'foo.com',
-    hostname: 'foo.com',
-    port: '',
-    pathname: '/',
-    search: '',
-    searchParams: URLSearchParams {},
-    hash: ''
-  }  
+    raw: URL {
+      href: 'https://foo.com/',
+      origin: 'https://foo.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'foo.com',
+      hostname: 'foo.com',
+      port: '',
+      pathname: '/',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    }  
+  }
   */
 
   env.getUrl('FAKE_ENDPOINT') // null
@@ -164,24 +168,32 @@ Fetch `URL` objects from url strings
   // It works with defaults
   env.getUrl('FAKE_ENDPOINT', 'http://localhost:3000')
   /*
-  URL {
+  {
+    httpOk: true,
     href: 'http://localhost:3000/',
-    origin: 'http://localhost:3000',
-    protocol: 'http:',
-    username: '',
-    password: '',
-    host: 'localhost:3000',
-    hostname: 'localhost',
-    port: '3000',
-    pathname: '/',
-    search: '',
-    searchParams: URLSearchParams {},
-    hash: ''
+    raw: URL {
+      href: 'http://localhost:3000/',
+      origin: 'http://localhost:3000',
+      protocol: 'http:',
+      username: '',
+      password: '',
+      host: 'localhost:3000',
+      hostname: 'localhost',
+      port: '3000',
+      pathname: '/',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    }
   }
   */
 ```
 
+### About URLs
+
 Why would one use `env.getUrl()` if one just wishes to grab the url string value? The best reason to use `getUrl()` and grab the `href` property is that `env.get()` doesn't care about the format of the value. Using `getUrl()` will ensure the url is properly formatted and return a `null` value if it isn't. In practice, having an _invalid_ url is the same as having no value at all. Then again, it's your code. Do what you want!
+
+As of now, `http`, `redis` and `postgresql` are the only supported protocols. Other protocols will return `null`. I'm not against adding new protocol support, but these are the ones that seemed most obvious to me. If you want other protocols supported, I'd recommend making a PR. You may create an issue, but I can't guarantee when I'll get around to implementation.
 
 ## Shortcut Methods
 
