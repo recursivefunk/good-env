@@ -26,8 +26,8 @@
     "node": ">=18.20.4"
   },
   "files": [
-    "index.js",
-    "index.d.ts"
+    "src/index.js",
+    "src/index.d.ts"
   ],
   "directories": {
     "test": "test"
