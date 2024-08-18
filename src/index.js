@@ -13,22 +13,48 @@ const isFunction = x => is(x) === '[object Function]';
 const parse = (items, converter) => items.map(t => converter(t, 10));
 const mapNums = items => parse(items, parseInt);
 const validType = item => ['number', 'boolean', 'string'].includes(item);
+const ENVIRONMENT = 'ENVIRONMENT';
+const PRODUCTION = 'production';
+let environmentKey = ENVIRONMENT;
 
 module.exports = Object
   .create({
-    getAWS ({
-      keyId,
-      accessKey,
-      region
-    } = {}) {
-      const awsKeyId = this.get('AWS_ACCESS_KEY_ID', keyId);
-      const awsSecretAccessKey = this.get('AWS_SECRET_ACCESS_KEY', accessKey);
-      const awsDefaultRegion = this.get('AWS_DEFAULT_REGION', region);
+    /**
+     * @description Configures the environment variable key that indicates the execution context for this process. The default is 'ENVIRONMENT'
+     * @param {string} key
+     * @returns {object}
+     */
+    usingEnv (key) {
+      environmentKey = key || ENVIRONMENT;
+      return this;
+    },
+    /**
+     * @description Returns true if the execution context environment variable indicates the execution context returns 'production'.
+     * Otherwise, it returns false.
+     * @returns {boolean}
+     */
+    isProduction () {
+      const env = this.get(environmentKey);
+      return env === PRODUCTION;
+    },
+    /**
+     * @description Fetches three commonly used AWS environment variables - access key id, secret access key and region.
+     * Note: You can only pass in a default region. No defaults for access key id or access key will be honored. This also
+     * function assumes the standard AWS naming convention being used.
+     * @param {object} defaults
+     * @returns {object}
+     */
+    getAWS ({ region } = {}) {
+      const [
+        awsKeyId,
+        awsSecretAccessKey,
+        awsRegion
+      ] = this.getAll(['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_REGION']);
 
       return {
         awsKeyId,
         awsSecretAccessKey,
-        awsDefaultRegion
+        awsRegion
       };
     },
     /**

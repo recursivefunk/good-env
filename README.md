@@ -138,6 +138,30 @@ env.assert(
 )
 ```
 
+Fetch AWS Credentials
+
+```javascript
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsRegion,
+} = env.getAWS();
+
+// Use a default region
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsRegion,
+} = env.getAWS({ region: 'region' });
+```
+
+Tell `good-env` which environment variable indicates the current process's execution context. By default, it assumes `ENVIRONMENT` but you can change it to be whatever you like. For now, this helps inform the `isProduction` function return value.
+
+```javascript
+env.isProduction(); // false
+env.usingEnv('NODE_ENV').isProduction(); // true
+```
+
 Fetch `URL` objects from url strings
 
 ```javascript
@@ -194,27 +218,6 @@ Fetch `URL` objects from url strings
 Why would one use `env.getUrl()` if one just wishes to grab the url string value? The best reason to use `getUrl()` and grab the `href` property is that `env.get()` doesn't care about the format of the value. Using `getUrl()` will ensure the url is properly formatted and return a `null` value if it isn't. In practice, having an _invalid_ url is the same as having no value at all. Then again, it's your code. Do what you want!
 
 As of now, `http`, `redis` and `postgresql` are the only supported protocols. Other protocols will return `null`. I'm not against adding new protocol support, but these are the ones that seemed most obvious to me. If you want other protocols supported, I'd recommend making a PR. You may create an issue, but I can't guarantee when I'll get around to implementation.
-
-Fetch AWS Credentials
-
-```javascript
-const {
-  awsKeyId,
-  awsSecretAccessKey,
-  awsDefaultRegion,
-} = env.getAWS();
-
-// Use defaults
-const {
-  awsKeyId,
-  awsSecretAccessKey,
-  awsDefaultRegion,
-} = env.getAWS({
-  keyId: 'keyId',
-  accessKey: 'accessKey',
-  region: 'region',
-});
-```
 
 ## Shortcut Methods
 
