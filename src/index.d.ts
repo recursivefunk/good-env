@@ -1,4 +1,5 @@
 declare module "good-env" {
+  export const getAWS: (defaults?: object) => object;
   /**
    * @description Finds the URL string in the environment associated with the given key. If
    * it's found, the function tries to construct a URL object. If the URL is invalid, return null.

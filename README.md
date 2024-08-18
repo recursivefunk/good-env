@@ -195,6 +195,27 @@ Why would one use `env.getUrl()` if one just wishes to grab the url string value
 
 As of now, `http`, `redis` and `postgresql` are the only supported protocols. Other protocols will return `null`. I'm not against adding new protocol support, but these are the ones that seemed most obvious to me. If you want other protocols supported, I'd recommend making a PR. You may create an issue, but I can't guarantee when I'll get around to implementation.
 
+Fetch AWS Credentials
+
+```javascript
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsDefaultRegion,
+} = env.getAWS();
+
+// Use defaults
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsDefaultRegion,
+} = env.getAWS({
+  keyId: 'keyId',
+  accessKey: 'accessKey',
+  region: 'region',
+});
+```
+
 ## Shortcut Methods
 
 ```javascript

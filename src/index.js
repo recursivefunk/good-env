@@ -16,6 +16,21 @@ const validType = item => ['number', 'boolean', 'string'].includes(item);
 
 module.exports = Object
   .create({
+    getAWS ({
+      keyId,
+      accessKey,
+      region
+    } = {}) {
+      const awsKeyId = this.get('AWS_ACCESS_KEY_ID', keyId);
+      const awsSecretAccessKey = this.get('AWS_SECRET_ACCESS_KEY', accessKey);
+      const awsDefaultRegion = this.get('AWS_DEFAULT_REGION', region);
+
+      return {
+        awsKeyId,
+        awsSecretAccessKey,
+        awsDefaultRegion
+      };
+    },
     /**
      * @description Finds the URL string in the environment associated with the given key. If
      * it's found, the function tries to construct a URL object. If the URL is invalid, return null.
