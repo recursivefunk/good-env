@@ -31,7 +31,7 @@ module.exports = Object
       } = this.getAll({
         AWS_ACCESS_KEY_ID: null,
         AWS_SECRET_ACCESS_KEY: null,
-        AWS_REGION: region,
+        AWS_REGION: region
       });
 
       return {
