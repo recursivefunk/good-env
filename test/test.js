@@ -5,14 +5,6 @@ require('dotenv').config({ path: 'test/test.env' });
 const test = require('tape');
 const env = require('../src/index');
 
-test('uses environment key', (t) => {
-  let isProduction = env.isProduction();
-  t.equals(isProduction, false);
-  isProduction = env.usingEnv('NODE_ENV').isProduction();
-  t.equals(isProduction, true);
-  t.end();
-});
-
 test('it gets AWS creds', (t) => {
   const {
     awsKeyId,

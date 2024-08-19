@@ -1,17 +1,5 @@
 declare module "good-env" {
   /**
-   * @description Configures the environment variable key that indicates the execution context for this process. The default is 'ENVIRONMENT'
-   * @param {string} key
-   * @returns {object}
-   */
-  export const usingEnv: (key?: string) => this;
-  /**
-   * @description Returns true if the execution context environment variable indicates the execution context returns 'production'.
-   * Otherwise, it returns false.
-   * @returns {boolean}
-   */
-  export const isProduction: () => boolean;
-  /**
    * @description Fetches three commonly used AWS environment variables - access key id, secret access key and region.
    * Note: You can only pass in a default region. No defaults for access key id or access key will be honored. This also
    * function assumes the standard AWS naming convention being used.

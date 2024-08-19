@@ -155,13 +155,6 @@ const {
 } = env.getAWS({ region: 'region' });
 ```
 
-Tell `good-env` which environment variable indicates the current process's execution context. By default, it assumes `ENVIRONMENT` but you can change it to be whatever you like. For now, this helps inform the `isProduction` function return value.
-
-```javascript
-env.isProduction(); // false
-env.usingEnv('NODE_ENV').isProduction(); // true
-```
-
 Fetch `URL` objects from url strings
 
 ```javascript
