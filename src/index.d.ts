@@ -1,5 +1,13 @@
 declare module "good-env" {
   /**
+   * @description Fetches three commonly used AWS environment variables - access key id, secret access key and region.
+   * Note: You can only pass in a default region. No defaults for access key id or access key will be honored. This also
+   * function assumes the standard AWS naming convention being used.
+   * @param {object} defaults
+   * @returns {object}
+   */
+  export const getAWS: (defaults?: object) => object;
+  /**
    * @description Finds the URL string in the environment associated with the given key. If
    * it's found, the function tries to construct a URL object. If the URL is invalid, return null.
    * If the URL is valid, return the URL object. If the key is not found and a default value is

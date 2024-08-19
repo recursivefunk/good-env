@@ -5,6 +5,20 @@ require('dotenv').config({ path: 'test/test.env' });
 const test = require('tape');
 const env = require('../src/index');
 
+test('it gets AWS creds', (t) => {
+  const {
+    awsKeyId,
+    awsSecretAccessKey,
+    awsRegion
+  } = env.getAWS();
+
+  t.equals(awsKeyId, 'exampleaccesskeyid');
+  t.equals(awsSecretAccessKey, 'examplesecretaccesskey');
+  t.equals(awsRegion, 'us-east-1');
+
+  t.end();
+});
+
 test('it parses a valid url', (t) => {
   const { httpOk, href } = env.getUrl('ENDPOINT');
   t.equals(href, 'https://foo.com/');

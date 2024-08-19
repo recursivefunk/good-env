@@ -17,6 +17,30 @@ const validType = item => ['number', 'boolean', 'string'].includes(item);
 module.exports = Object
   .create({
     /**
+     * @description Fetches three commonly used AWS environment variables - access key id, secret access key and region.
+     * Note: You can only pass in a default region. No defaults for access key id or access key will be honored. This also
+     * function assumes the standard AWS naming convention being used.
+     * @param {object} defaults
+     * @returns {object}
+     */
+    getAWS ({ region } = {}) {
+      const {
+        AWS_ACCESS_KEY_ID: awsKeyId,
+        AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+        AWS_REGION: awsRegion
+      } = this.getAll({
+        AWS_ACCESS_KEY_ID: null,
+        AWS_SECRET_ACCESS_KEY: null,
+        AWS_REGION: region
+      });
+
+      return {
+        awsKeyId,
+        awsSecretAccessKey,
+        awsRegion
+      };
+    },
+    /**
      * @description Finds the URL string in the environment associated with the given key. If
      * it's found, the function tries to construct a URL object. If the URL is invalid, return null.
      * If the URL is valid, return the URL object. If the key is not found and a default value is

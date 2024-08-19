@@ -138,6 +138,23 @@ env.assert(
 )
 ```
 
+Fetch AWS Credentials
+
+```javascript
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsRegion,
+} = env.getAWS();
+
+// Use a default region
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsRegion,
+} = env.getAWS({ region: 'region' });
+```
+
 Fetch `URL` objects from url strings
 
 ```javascript
