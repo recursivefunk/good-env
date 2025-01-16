@@ -1,7 +1,9 @@
 
 # good-env
 
-![logo](./img/good-env-logo.svg)
+<p align="center">
+  <img src="./img/good-env-logo.svg" alt="good-env-logo" width="400"/>
+</p>
 
 ![workflow](https://github.com/recursivefunk/good-env/actions/workflows/ci.yml/badge.svg)
 
