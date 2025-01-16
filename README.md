@@ -1,6 +1,8 @@
 
 # good-env
 
+![logo](./img/good-env-logo.svg)
+
 ![workflow](https://github.com/recursivefunk/good-env/actions/workflows/ci.yml/badge.svg)
 
 [![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)

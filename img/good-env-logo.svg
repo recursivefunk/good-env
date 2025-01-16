@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="#4CAF50" opacity="0.1"/>
+  
+  <!-- Leaf shape formed by curves -->
+  <path d="M100 50 C140 50, 150 100, 150 150 C100 150, 50 100, 100 50" 
+        fill="#4CAF50" 
+        opacity="0.9"/>
+  
+  <!-- ENV text -->
+  <text x="100" y="115" 
+        font-family="Arial, sans-serif" 
+        font-size="24" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="#2E7D32">ENV</text>
+  
+  <!-- Circular arrow representing environment -->
+  <path d="M60 80 A40 40 0 1 1 140 80" 
+        fill="none" 
+        stroke="#2E7D32" 
+        stroke-width="4" 
+        stroke-linecap="round"/>
+</svg>
