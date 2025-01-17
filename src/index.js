@@ -1,5 +1,5 @@
 'use strict';
-
+const { isIP } = require('node:net');
 const { URL } = require('node:url');
 const { makeGoodUrl } = require('./lib/url-types');
 const ok = x => !!x;
@@ -16,6 +16,30 @@ const validType = item => ['number', 'boolean', 'string'].includes(item);
 
 module.exports = Object
   .create({
+    /**
+     * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
+     * or IPv6 IP and there's no default value, null is returned. If a default value is provided and it is a valid IPv4 or IPv6
+     * IP, the default value is retruned. If the default value is not valid, null is returned. This function won't return a value
+     * that is not a valid IP address.
+     * @param {string} key - A unique key that points to the IP address
+     * @param {string} defaultVal - The default IP address to be used if the key isn't found
+     * @returns
+     */
+    getIP (key, defaultVal) {
+      const strIP = this.get(key);
+
+      if (!strIP) {
+        if (!isIP(defaultVal)) {
+          return null;
+        } else {
+          return defaultVal;
+        }
+      }
+
+      if (isIP(strIP)) return strIP;
+      if (isIP(defaultVal)) return defaultVal;
+      return null;
+    },
     /**
      * @description Fetches three commonly used AWS environment variables - access key id, secret access key and region.
      * Note: You can only pass in a default region. No defaults for access key id or access key will be honored. This also

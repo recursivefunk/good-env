@@ -5,6 +5,42 @@ require('dotenv').config({ path: 'test/test.env' });
 const test = require('tape');
 const env = require('../src/index');
 
+test('it gets an IP address', (t) => {
+  const ip = env.getIP('VALID_IP');
+  t.equals(ip, '192.168.1.60');
+  t.end();
+});
+
+test('it gets a default IP address', (t) => {
+  const ip = env.getIP('NO_IP_HERE', '127.0.0.1');
+  t.equals(ip, '127.0.0.1');
+  t.end();
+});
+
+test('it does not return an invalid IP', (t) => {
+  const ip = env.getIP('INVALID_IP');
+  t.notOk(ip);
+  t.end();
+});
+
+test('it returns a valid default with an invalid key', (t) => {
+  const ip = env.getIP('INVALID_IP', '127.0.0.1');
+  t.equals(ip, '127.0.0.1');
+  t.end();
+});
+
+test('it does not return a non-existing IP value', (t) => {
+  const ip = env.getIP('NO_IP_HERE');
+  t.notOk(ip);
+  t.end();
+});
+
+test('it does not return an invalid default IP', (t) => {
+  const ip = env.getIP('NO_IP_HERE', 'bleep');
+  t.notOk(ip);
+  t.end();
+});
+
 test('it gets AWS creds', (t) => {
   const {
     awsKeyId,

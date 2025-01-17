@@ -1,5 +1,15 @@
 declare module "good-env" {
   /**
+   * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
+   * or IPv6 IP and there's no default value, null is returned. If a default value is provided and it is a valid IPv4 or IPv6
+   * IP, the default value is retruned. If the default value is not valid, null is returned. This function won't return a value
+   * that is not a valid IP address.
+   * @param {string} key - A unique key that points to the IP address
+   * @param {string} defaultVal - The default IP address to be used if the key isn't found
+   * @returns 
+   */
+  export const getIP: (key: string, defaultVal?: string) => any;
+  /**
    * @description Fetches three commonly used AWS environment variables - access key id, secret access key and region.
    * Note: You can only pass in a default region. No defaults for access key id or access key will be honored. This also
    * function assumes the standard AWS naming convention being used.
