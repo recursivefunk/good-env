@@ -148,6 +148,7 @@ Fetch AWS Credentials
 const {
   awsKeyId,
   awsSecretAccessKey,
+  awsSessionToken,
   awsRegion,
 } = env.getAWS();
 
@@ -155,6 +156,7 @@ const {
 const {
   awsKeyId,
   awsSecretAccessKey,
+  awsSessionToken,
   awsRegion,
 } = env.getAWS({ region: 'region' });
 ```

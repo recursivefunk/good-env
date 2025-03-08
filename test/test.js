@@ -45,12 +45,14 @@ test('it gets AWS creds', (t) => {
   const {
     awsKeyId,
     awsSecretAccessKey,
+    awsSessionToken,
     awsRegion
   } = env.getAWS();
 
   t.equals(awsKeyId, 'exampleaccesskeyid');
   t.equals(awsSecretAccessKey, 'examplesecretaccesskey');
   t.equals(awsRegion, 'us-east-1');
+  t.equals(awsSessionToken, 'session');
 
   t.end();
 });

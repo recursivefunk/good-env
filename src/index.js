@@ -51,16 +51,19 @@ module.exports = Object
       const {
         AWS_ACCESS_KEY_ID: awsKeyId,
         AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-        AWS_REGION: awsRegion
+        AWS_SESSION_TOKEN: awsSessionToken,
+        AWS_REGION: awsRegion,
       } = this.getAll({
         AWS_ACCESS_KEY_ID: null,
         AWS_SECRET_ACCESS_KEY: null,
+        AWS_SESSION_TOKEN: null,
         AWS_REGION: region
       });
 
       return {
         awsKeyId,
         awsSecretAccessKey,
+        awsSessionToken,
         awsRegion
       };
     },
