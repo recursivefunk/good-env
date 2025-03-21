@@ -11,228 +11,196 @@
 
 🚨 v7 requires Node version 18.20.4 or higher! 🚨
 
-`good-env` provides a more intuitive way to interface with environment variables for node apps. Reasoning
-about raw strings is OK for some things but for non-trivial applications, booleans, numbers, lists or even
-the existence (or non-existence) of environment configurations can play a key role in how an application behaves. Lastly, `good-env` has no production dependencies.
+# good-env
 
-```
-$ npm install good-env --save
-```
+A more intuitive way to work with environment variables in Node.js applications.
 
-With normal process.env
+[![npm version](https://img.shields.io/npm/v/good-env.svg)](https://www.npmjs.com/package/good-env)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-```
-$ export HOST=localhost
-$ export SECRET=shhh
-$ export FOO=10
-$ export A_TRUE_VAL=true
-$ export A_FALSE_VAL=false
-$ export LIST=foo,bar,bang
-$ export ENDPOINT=https://foo.com
-$ node
-> process.env.FOO
-'10'
-> process.env.A_TRUE_VAL
-'true'
-> process.env.A_FALSE_VAL
-'false'
-> process.env.LIST
-'foo,bar,bang'
->
+## Why good-env?
+
+When building non-trivial applications, working with environment variables as raw strings can be limiting. `good-env` provides:
+
+- Type conversion (strings to numbers, booleans, lists, etc.)
+- Default values
+- Existence checking
+- Validation
+- No production dependencies
+
+## Installation
+
+```bash
+npm install good-env --save
 ```
 
-Using `good-env`
+## Usage
+
+### Basic Usage
+
+Import the package:
 
 ```javascript
-const env = require('good-env')
-env.getNumber('FOO') // 10
-env.getBool('A_TRUE_VAL') // true
-env.getBool('A_FALSE_VAL') // false
+const env = require('good-env');
 ```
 
-> **Warning**
-> Checking the _existence_ of a boolean value which resolves to `false` will return `true` because `ok()` doesn't give you a value.
+### Getting Values
 
-```
-export A_BOOL_VAL=false
-```
-```javascript
-env.ok('A_BOOL_VAL') // true
-```
-
-Specify defaults
+#### Simple Values
 
 ```javascript
-env.get('NOT_SET', 'foo') // 'foo'
+// Get a string (default behavior)
+env.get('HOST');                    // 'localhost'
+
+// With a default value if not set
+env.get('NOT_SET', 'default');      // 'default'
 ```
 
-Batch Gets
+#### Type Conversion
 
 ```javascript
-env.getAll(['SECRET', 'HOST']) // ['shhh', 'localhost']
+// Get as a number
+env.getNumber('PORT');              // 8080 (as a number, not string)
+env.num('PORT');                    // Shorthand for getNumber()
 
-// defaults work here too
+// Get as a boolean
+env.getBool('DEBUG');               // true (converts 'true' string to boolean)
+env.bool('DEBUG');                  // Shorthand for getBool()
+
+// Get as a list
+env.getList('ALLOWED_ORIGINS');     // ['localhost', 'example.com']
+env.list('ALLOWED_ORIGINS');        // Shorthand for getList()
+
+// Get a numeric list
+env.list('VALUES', { cast: 'number' }); // [1, 2, 3] (converts from '1,2,3')
+```
+
+#### URLs and IPs
+
+```javascript
+// Get as a URL object
+env.getUrl('API_ENDPOINT');         // Returns URL object with helpful properties
+env.url('API_ENDPOINT');            // Shorthand for getUrl()
+
+// Get an IP address (with validation)
+env.getIp('SERVER_IP', '127.0.0.1'); // Returns the IP if valid, or default
+```
+
+### Multiple Variables
+
+#### First Available Value
+
+```javascript
+// Use first available variable from a list
+env.get(['PRIMARY_HOST', 'BACKUP_HOST', 'DEFAULT_HOST']);
+
+// With default fallback
+env.get(['PRIMARY_HOST', 'BACKUP_HOST'], 'localhost');
+```
+
+#### Batch Operations
+
+```javascript
+// Get multiple values as an array
+env.getAll(['SECRET', 'HOST', 'PORT']);
+
+// Get multiple values as an object with defaults
 env.getAll({
-  A_SECRET: 'lolz', 
-  HOST: null // null means no default
-}) // { A_SECRET: 'lolz', HOST: 'localhost' }
+  API_KEY: null,         // null means no default
+  PORT: 3000,            // Default if not set
+  DEBUG: false
+});
 ```
 
-Use the first available environment variable
+### Validation
+
+#### Existence Checking
 
 ```javascript
-// old and busted
-const host = process.env.THE_HOST || process.env.HOST // 'localhost'
-
-// new hotness
-const host = env.get(['THE_HOST', 'HOST']) // 'localhost'
-
-// works with defaults
-const host = env.get(['THE_HOST', 'A_HOST'], 'localhost') // 'localhost'
+// Check if variables exist
+env.ok('HOST');                     // true if HOST exists
+env.ok('HOST', 'PORT', 'API_KEY');  // true if ALL exist
 ```
 
-Lists
+#### Assertions
 
 ```javascript
-env.getList('LIST') // ['foo', 'bar', 'bang']
-env.getList('LIST_NOT_SET') // []
-```
-
-Number Lists
-
-```
-$ export LIST=1,2,3
-```
-
-```javascript
-process.env.LIST // '1,2,3'
-env.list('LIST', { cast: 'number' }) // [1, 2, 3]
-```
-
-Sometimes you just need to know if something exists
-
-```javascript
-env.ok('NOT_SET') // false
-env.ok('FOO') // true
-
-// works with multiple arguments.
-// Returns true if ALL keys exist
-env.ok('FOO', 'BAR') // true
-env.ok('FOO', 'BAR', 'NOT_SET') // false
-```
-
-Use `.assert(item1, item2...)` to check the existence and/or type of a few items at once
-Note: If any variable passed to `assert()` doesn't exist or is otherwise
-invalid, an error will be thrown.
-
-```javascript
-
+// Validate variables (throws error if invalid)
 env.assert(
-    // Will ensure 'HOSTNAME' exists
-    'HOSTNAME',
-    
-    // Will ensure 'PORT' both exists and is a number
-    { 'PORT': { type: 'number' }},
-    
-    // Will ensure 'INTERVAL' exists, it's a number and its value is greater
-    // than or equal to 1000
-    { 'INTERVAL': { type: 'number', ok: s => s >= 1000 }}
-    
-    // ... any number of arguments
-)
-```
-
-Fetch AWS Credentials
-
-```javascript
-const {
-  awsKeyId,
-  awsSecretAccessKey,
-  awsSessionToken,
-  awsRegion,
-} = env.getAWS();
-
-// Use a default region
-const {
-  awsKeyId,
-  awsSecretAccessKey,
-  awsSessionToken,
-  awsRegion,
-} = env.getAWS({ region: 'region' });
-```
-
-Fetch an IP Address
-
-```javascript
-const validIP = env.getIp('MY_IP', '127.0.0.1');
-console.log(validIp); // 192.168.1.60
-const invalidIP = env.getIp('INVALID_IP');
-console.log(invalidIp); // null
-```
-
-Fetch `URL` objects from url strings
-
-```javascript
-  env.getUrl('ENDPOINT')
-  /*
-  {
-    httpOk: true,
-    href: 'https://foo.com/',
-    raw: URL {
-      href: 'https://foo.com/',
-      origin: 'https://foo.com',
-      protocol: 'https:',
-      username: '',
-      password: '',
-      host: 'foo.com',
-      hostname: 'foo.com',
-      port: '',
-      pathname: '/',
-      search: '',
-      searchParams: URLSearchParams {},
-      hash: ''
-    }  
-  }
-  */
-
-  env.getUrl('FAKE_ENDPOINT') // null
-
-  // It works with defaults
-  env.getUrl('FAKE_ENDPOINT', 'http://localhost:3000')
-  /*
-  {
-    httpOk: true,
-    href: 'http://localhost:3000/',
-    raw: URL {
-      href: 'http://localhost:3000/',
-      origin: 'http://localhost:3000',
-      protocol: 'http:',
-      username: '',
-      password: '',
-      host: 'localhost:3000',
-      hostname: 'localhost',
-      port: '3000',
-      pathname: '/',
-      search: '',
-      searchParams: URLSearchParams {},
-      hash: ''
+  // Simple existence check
+  'HOST',
+  
+  // Type checking
+  { PORT: { type: 'number' }},
+  
+  // Custom validation
+  { REFRESH_INTERVAL: { 
+      type: 'number', 
+      ok: val => val >= 1000 
     }
   }
-  */
+);
 ```
 
-### About URLs
-
-Why would one use `env.getUrl()` if one just wishes to grab the url string value? The best reason to use `getUrl()` and grab the `href` property is that `env.get()` doesn't care about the format of the value. Using `getUrl()` will ensure the url is properly formatted and return a `null` value if it isn't. In practice, having an _invalid_ url is the same as having no value at all. Then again, it's your code. Do what you want!
-
-As of now, `http`, `redis` and `postgresql` are the only supported protocols. Other protocols will return `null`. I'm not against adding new protocol support, but these are the ones that seemed most obvious to me. If you want other protocols supported, I'd recommend making a PR. You may create an issue, but I can't guarantee when I'll get around to implementation.
-
-
-## Shortcut Methods
+### AWS Credentials
 
 ```javascript
-env.num() ==> env.getNumber()
-env.bool() ==> env.getBool()
-env.list() ==> env.getList()
-env.url() ==> env.getUrl()
+// Get AWS credentials from standard environment variables
+const {
+  awsKeyId,
+  awsSecretAccessKey,
+  awsSessionToken,
+  awsRegion
+} = env.getAWS();
+
+// With default region
+const credentials = env.getAWS({ region: 'us-west-2' });
 ```
+
+## Important Behavior Notes
+
+### Boolean Existence vs Value
+
+When checking for the existence of a boolean environment variable:
+
+```javascript
+// If A_BOOL_VAL=false
+env.ok('A_BOOL_VAL');   // Returns true (checking existence, not value)
+env.getBool('A_BOOL_VAL'); // Returns false (actual value)
+```
+
+### URL Validation
+
+- `getUrl()` only supports 'http', 'https', 'redis', and 'postgresql' protocols
+- Invalid URLs return `null` instead of throwing errors
+- Using `getUrl()` ensures proper URL format
+
+## Examples
+
+### Complete Configuration Setup
+
+```javascript
+// app-config.js
+const env = require('good-env');
+
+// Validate critical variables
+env.assert(
+  'DATABASE_URL',
+  { PORT: { type: 'number' }}
+);
+
+module.exports = {
+  port: env.num('PORT', 3000),
+  database: env.url('DATABASE_URL'),
+  debug: env.bool('DEBUG', false),
+  allowedOrigins: env.list('ALLOWED_ORIGINS', 'localhost'),
+  cache: {
+    enabled: env.bool('CACHE_ENABLED', true),
+    ttl: env.num('CACHE_TTL', 3600)
+  }
+};
+```
+
+## License
+
+MIT
