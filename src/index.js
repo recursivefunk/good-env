@@ -13,9 +13,15 @@ const isFunction = x => is(x) === '[object Function]';
 const parse = (items, converter) => items.map(t => converter(t, 10));
 const mapNums = items => parse(items, parseInt);
 const validType = item => ['number', 'boolean', 'string'].includes(item);
+let store = { ...process.env };
 
 module.exports = Object
   .create({
+    async _mergeSecrets_ ({ fetcherFunc }) {
+      const secret = await fetcherFunc();
+      store = { ...store, ...secret };
+      return this;
+    },
     /**
      * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
      * or IPv6 IP and there's no default value, null is returned. If a default value is provided and it is a valid IPv4 or IPv6
@@ -123,8 +129,8 @@ module.exports = Object
       }
 
       keys.some(key => {
-        if (ok(process.env[key])) {
-          value = process.env[key];
+        if (ok(store[key])) {
+          value = store[key];
           return true;
         }
         return false;
@@ -172,7 +178,7 @@ module.exports = Object
      * @param {(string|string[])} keys - A unique key or array of keys
      *
      */
-    ok: (...keys) => keys.every(key => ok(process.env[key])),
+    ok: (...keys) => keys.every(key => ok(store[key])),
 
     /**
      * @description This method ensures 1 to many environment variables either
@@ -262,7 +268,7 @@ module.exports = Object
     getBool (key, defaultVal) {
       let value;
 
-      value = process.env[key];
+      value = store[key];
 
       if (ok(value)) {
         value = value.toLowerCase().trim();
