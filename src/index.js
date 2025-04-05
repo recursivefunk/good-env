@@ -17,10 +17,10 @@ let store = { ...process.env };
 
 module.exports = Object
   .create({
-    async _mergeSecrets_({ fetcherFunc }) {
+    async _mergeSecrets_ ({ fetcherFunc }) {
       const secret = await fetcherFunc();
       store = { ...store, ...secret };
-      return this;      
+      return this;
     },
     /**
      * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
