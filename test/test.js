@@ -5,6 +5,23 @@ require('dotenv').config({ path: 'test/test.env' });
 const test = require('tape');
 const env = require('../src/index');
 
+test('it merges secrets', async (t) => {
+  const fetcherFunc = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          FOOB: 'bar',
+          BARZ: 'baz'
+        });
+      }, 10);
+    });
+  };
+  const env2 = await env._mergeSecrets_({ fetcherFunc });
+  t.equals(env2.get('FOOB'), 'bar');
+  t.equals(env2.get('BARZ'), 'baz');
+  t.end();
+});
+
 test('it gets an IP address', (t) => {
   const ip = env.getIP('VALID_IP');
   t.equals(ip, '192.168.1.60');
