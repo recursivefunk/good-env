@@ -1,5 +1,13 @@
 declare module "good-env" {
   /**
+   * @description Tell Good Env to go to secrets manager, grab the object under the specified secretId and merge it with the
+   * environment.
+   * @param {any} awsSecretsManager - An instance of AWS Secrets Manager is imported from the SDK
+   * @param {string} awsSecretsManager - The secret ID to use to fetch the secrets object. If not supplied, the function will
+   * check environment variables AWS_SECRET_ID and SECRET_ID. If neither of which are defined, the function will throw an error
+   */
+  export const use: (awsSecretsManager: any, secretId?: string) => Promise<void>;
+  /**
    * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
    * or IPv6 IP and there's no default value, null is returned. If a default value is provided and it is a valid IPv4 or IPv6
    * IP, the default value is retruned. If the default value is not valid, null is returned. This function won't return a value

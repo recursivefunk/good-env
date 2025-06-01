@@ -1,4 +1,3 @@
-
 # good-env
 
 <p align="center">
@@ -155,6 +154,29 @@ const {
 
 // With default region
 const credentials = env.getAWS({ region: 'us-west-2' });
+```
+
+### AWS Secrets Manager Integration
+
+Some folks like to store secrets in AWS secrets manager in the form of a JSON object as opposed (or in addition) to environment variables. It's me, I'm some folks. Good Env now supports this pattern. To avoid introducing a dependency you'll have to bring your own instance of AWS Secrets Manager though. Be sure to specify your AWS region as an environment variable, otherwise, it'll default to `us-east-1`.
+
+Note, if something goes wrong, this function _will_ throw an error.
+
+```javascript
+const awsSecretsManager = require('@aws-sdk/client-secrets-manager');
+
+(async function() {
+  // Load secrets from AWS Secrets Manager
+  await env.use(awsSecretsManager, 'my-secret-id');
+
+  // The secret ID can also be specified via environment variables
+  // AWS_SECRET_ID or SECRET_ID
+  await env.use(awsSecretsManager);
+
+  // Secrets are automatically merged with existing environment variables
+  // and can be accessed using any of the standard methods
+  const secretValue = env.get('someSecretFromAWSSecretsManager');
+}());
 ```
 
 ## Important Behavior Notes

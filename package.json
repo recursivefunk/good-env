@@ -1,13 +1,13 @@
 {
   "name": "good-env",
-  "version": "7.4.0",
+  "version": "7.5.0",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "src/index.js",
   "scripts": {
     "test": "nyc --check-coverage --lines 100 node test/test.js",
     "lint": "semistandard test/ src/index.js",
-    "ci": "semistandard test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js",
-    "format": "semistandard --fix test/ src/index.js"
+    "ci": "semistandard test/test.js src/index.js && nyc --check-coverage --lines 100 node test/test.js",
+    "format": "semistandard --fix test/test.js src/*.js"
   },
   "keywords": [
     "environment",

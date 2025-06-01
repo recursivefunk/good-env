@@ -17,10 +17,29 @@ let store = { ...process.env };
 
 module.exports = Object
   .create({
-    async _mergeSecrets_ ({ fetcherFunc }) {
-      const secret = await fetcherFunc();
+    async use (awsSecretsManager, secretId) {
+      const { SecretsManagerClient, GetSecretValueCommand } = awsSecretsManager;
+      const client = new SecretsManagerClient({
+        region: process.env.AWS_REGION || 'us-east-1'
+      });
+
+      if (!secretId) {
+        secretId = this.get(['AWS_SECRET_ID', 'SECRET_ID']);
+      }
+
+      if (!secretId) {
+        throw new Error('\'secretId\' was not specified, and it wasn\'t found as \'AWS_SECRET_ID\' or \'SECRET_ID\' in the environment.');
+      }
+
+      const response = await client.send(
+        new GetSecretValueCommand({
+          SecretId: secretId,
+          VersionStage: 'AWSCURRENT' // VersionStage defaults to AWSCURRENT if unspecified
+        })
+      );
+      const secretStr = response.SecretString;
+      const secret = JSON.parse(secretStr);
       store = { ...store, ...secret };
-      return this;
     },
     /**
      * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
