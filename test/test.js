@@ -4,21 +4,35 @@ require('dotenv').config({ path: 'test/test.env' });
 
 const test = require('tape');
 const env = require('../src/index');
+const {
+  GetSecretValueCommand,
+  SecretsManagerClientHappy
+} = require('./mocks');
 
-test('it merges secrets', async (t) => {
-  const fetcherFunc = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          FOOB: 'bar',
-          BARZ: 'baz'
-        });
-      }, 10);
-    });
-  };
-  const env2 = await env._mergeSecrets_({ fetcherFunc });
-  t.equals(env2.get('FOOB'), 'bar');
-  t.equals(env2.get('BARZ'), 'baz');
+test('it throws when no secretId is given when attempting to use secretsManager', async (t) => {
+  const awsSecretsManager = { SecretsManagerClient: SecretsManagerClientHappy, GetSecretValueCommand };
+
+  try {
+    await env.use(awsSecretsManager);
+    t.fail('We should not be here. An error should have been thrown');
+  } catch (e) {
+    console.log(e.message);
+    t.equals(e.message, '\'secretId\' was not specified, and it wasn\'t found as \'AWS_SECRET_ID\' or \'SECRET_ID\' in the environment.');
+    t.end();
+  }
+});
+
+test('it uses secrets manager (happy path)', async (t) => {
+  const awsSecretsManager = { SecretsManagerClient: SecretsManagerClientHappy, GetSecretValueCommand };
+  await env.use(awsSecretsManager, 'my-secret');
+  const foo = env.get('FOO');
+  const secretVal1 = env.get('secretVal1');
+  const secretVal2 = env.get('secretVal2');
+
+  t.equals(foo, 'bar');
+  t.equals(secretVal1, 'val1');
+  t.equals(secretVal2, 'val2');
+
   t.end();
 });
 
