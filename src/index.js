@@ -22,7 +22,7 @@ module.exports = Object
       const client = new SecretsManagerClient({
         region: process.env.AWS_REGION || 'us-east-1'
       });
-      let response;
+
       if (!secretId) {
         secretId = this.get(['AWS_SECRET_ID', 'SECRET_ID']);
       }
@@ -31,7 +31,7 @@ module.exports = Object
         throw new Error('\'secretId\' was not specified, and it wasn\'t found as \'AWS_SECRET_ID\' or \'SECRET_ID\' in the environment.');
       }
 
-      response = await client.send(
+      const response = await client.send(
         new GetSecretValueCommand({
           SecretId: secretId,
           VersionStage: 'AWSCURRENT' // VersionStage defaults to AWSCURRENT if unspecified

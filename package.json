@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nyc --check-coverage --lines 100 node test/test.js",
     "lint": "semistandard test/ src/index.js",
-    "ci": "semistandard test/ src/index.js && nyc --check-coverage --lines 100 node test/test.js",
+    "ci": "semistandard test/test.js src/index.js && nyc --check-coverage --lines 100 node test/test.js",
     "format": "semistandard --fix test/test.js src/*.js"
   },
   "keywords": [
