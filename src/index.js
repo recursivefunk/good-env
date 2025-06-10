@@ -43,7 +43,9 @@ module.exports = Object
       );
       const secretStr = response.SecretString;
       const secret = JSON.parse(secretStr);
-      store = { ...store, ...secret };
+      Object.entries(secret).forEach(([key, value]) => {
+        this.set(key, value);
+      });
     },
     /**
      * @description Fetches an IP address from the environment. If the value found under the specified key is not a valid IPv4
