@@ -1,6 +1,6 @@
 {
   "name": "good-env",
-  "version": "7.6.0",
+  "version": "7.6.1",
   "description": "Better environment variable handling for Twelve-Factor node apps",
   "main": "src/index.js",
   "scripts": {

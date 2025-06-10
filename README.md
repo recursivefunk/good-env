@@ -168,6 +168,8 @@ const credentials = env.getAWS({ region: 'us-west-2' });
 
 Some folks like to store secrets in AWS secrets manager in the form of a JSON object as opposed (or in addition) to environment variables. It's me, I'm some folks. Good Env now supports this pattern. To avoid introducing a dependency you'll have to bring your own instance of AWS Secrets Manager though. Be sure to specify your AWS region as an environment variable, otherwise, it'll default to `us-east-1`.
 
+Not only will your secrets be merged with the Good Env store, but they will also be stored in the underlying `process.env` object in case there are components that are still pulling from the environment directly.
+
 Note, if something goes wrong, this function _will_ throw an error.
 
 ```javascript

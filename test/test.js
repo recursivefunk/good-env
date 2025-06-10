@@ -40,6 +40,10 @@ test('it uses secrets manager (happy path)', async (t) => {
   t.equals(secretVal1, 'val1');
   t.equals(secretVal2, 'val2');
 
+  // Ensure it updates the environment variables
+  t.equals(process.env.secretVal1, 'val1');
+  t.equals(process.env.secretVal2, 'val2');
+
   t.end();
 });
 
