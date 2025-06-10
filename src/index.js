@@ -13,7 +13,7 @@ const isFunction = x => is(x) === '[object Function]';
 const parse = (items, converter) => items.map(t => converter(t, 10));
 const mapNums = items => parse(items, parseInt);
 const validType = item => ['number', 'boolean', 'string'].includes(item);
-let store = { ...process.env };
+const store = { ...process.env };
 
 module.exports = Object
   .create({
