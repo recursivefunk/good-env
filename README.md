@@ -141,6 +141,14 @@ env.assert(
 );
 ```
 
+#### Adding to the environment
+
+```javascript
+env.add('NEW_ENV_VAR', 'newVal');
+process.env.NEW_ENV_VAR // 'newVal'
+env.get('NEW_ENV_VAR'); // 'newVal'
+```
+
 ### AWS Credentials
 
 ```javascript
