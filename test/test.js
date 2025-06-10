@@ -9,8 +9,8 @@ const {
   SecretsManagerClientHappy
 } = require('./mocks');
 
-test('it adds an env var', (t) => { 
-  env.add('NEW_ENV_VAR', 'bar');
+test('it adds an env var', (t) => {
+  env.set('NEW_ENV_VAR', 'bar');
   t.equals(process.env.NEW_ENV_VAR, 'bar');
   t.equals(env.get('NEW_ENV_VAR'), 'bar');
   t.end();

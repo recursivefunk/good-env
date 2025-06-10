@@ -17,7 +17,7 @@ let store = { ...process.env };
 
 module.exports = Object
   .create({
-    add (key, value) {
+    set (key, value) {
       process.env[key] = value;
       store[key] = value;
     },

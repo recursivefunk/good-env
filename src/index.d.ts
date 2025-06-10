@@ -1,5 +1,5 @@
 declare module "good-env" {
-  export const add: (key: string, value: string) => void;
+  export const set: (key: string, value: string) => void;
   /**
    * @description Tell Good Env to go to secrets manager, grab the object under the specified secretId and merge it with the
    * environment.
