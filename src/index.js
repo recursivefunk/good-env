@@ -17,6 +17,10 @@ let store = { ...process.env };
 
 module.exports = Object
   .create({
+    set (key, value) {
+      process.env[key] = value;
+      store[key] = value;
+    },
     async use (awsSecretsManager, secretId) {
       const { SecretsManagerClient, GetSecretValueCommand } = awsSecretsManager;
       const client = new SecretsManagerClient({

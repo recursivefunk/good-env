@@ -9,6 +9,13 @@ const {
   SecretsManagerClientHappy
 } = require('./mocks');
 
+test('it adds an env var', (t) => {
+  env.set('NEW_ENV_VAR', 'bar');
+  t.equals(process.env.NEW_ENV_VAR, 'bar');
+  t.equals(env.get('NEW_ENV_VAR'), 'bar');
+  t.end();
+});
+
 test('it throws when no secretId is given when attempting to use secretsManager', async (t) => {
   const awsSecretsManager = { SecretsManagerClient: SecretsManagerClientHappy, GetSecretValueCommand };
 
