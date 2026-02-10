@@ -78,8 +78,23 @@ env.list('VALUES', { cast: 'number' }); // [1, 2, 3] (converts from '1,2,3')
 
 ```javascript
 // Get as a URL object
-env.getUrl('API_ENDPOINT');         // Returns URL object with helpful properties
+// API_ENDPOINT=https://api.example.com/v1
+const apiUrl = env.getUrl('API_ENDPOINT');
+// Returns:
+// {
+//   httpOk: true,
+//   redisOk: false,
+//   pgOk: false,
+//   href: 'https://api.example.com/v1',
+//   raw: URL { ... }  // Native Node.js URL object
+// }
+
 env.url('API_ENDPOINT');            // Shorthand for getUrl()
+
+// Supported protocols: http, https, redis, postgresql
+// DATABASE_URL=postgresql://user:pass@localhost:5432/mydb
+const dbUrl = env.getUrl('DATABASE_URL');
+// Returns: { pgOk: true, redisOk: false, httpOk: false, href: '...', raw: URL {...} }
 
 // Get an IP address (with validation)
 env.getIp('SERVER_IP', '127.0.0.1'); // Returns the IP if valid, or default
