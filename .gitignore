@@ -11,6 +11,7 @@ Thumbs.db
 .env
 test.env
 node_modules/
+dist/
 .nyc_output/
 coverage/
 

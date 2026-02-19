@@ -2,12 +2,15 @@
   "name": "good-env",
   "version": "7.6.1",
   "description": "Better environment variable handling for Twelve-Factor node apps",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "nyc --check-coverage --lines 100 node test/test.js",
-    "lint": "semistandard test/ src/index.js",
-    "ci": "semistandard test/test.js src/index.js && nyc --check-coverage --lines 100 node test/test.js",
-    "format": "semistandard --fix test/test.js src/*.js"
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && nyc --check-coverage --lines 100 node test/test.js",
+    "lint": "semistandard test/",
+    "ci": "tsc --noEmit && semistandard test/test.js && npm run build && nyc --check-coverage --lines 100 node test/test.js",
+    "format": "semistandard --fix test/test.js"
   },
   "keywords": [
     "environment",
@@ -26,9 +29,12 @@
     "node": ">=18.20.4"
   },
   "files": [
-    "src/index.js",
-    "src/lib/url-types.js",
-    "src/index.d.ts"
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/index.js.map",
+    "dist/index.d.ts.map",
+    "dist/lib/url-types.js",
+    "dist/lib/url-types.d.ts"
   ],
   "directories": {
     "test": "test"
@@ -42,9 +48,11 @@
   },
   "homepage": "https://github.com/recursivefunk/good-env#readme",
   "devDependencies": {
+    "@types/node": "^25.3.0",
     "dotenv": "^16.4.5",
     "nyc": "15.1.0",
+    "semistandard": "*",
     "tape": "5.5.3",
-    "semistandard": "*"
+    "typescript": "^5.9.3"
   }
 }

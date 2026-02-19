@@ -3,7 +3,7 @@
 require('dotenv').config({ path: 'test/test.env' });
 
 const test = require('tape');
-const env = require('../src/index');
+const env = require('../dist/index');
 const {
   GetSecretValueCommand,
   SecretsManagerClientHappy
