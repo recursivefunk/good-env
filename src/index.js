@@ -331,14 +331,9 @@ module.exports = Object
      */
     getNumber (key, defaultVal) {
       const value = this.get(key, defaultVal);
-      const intVal = parseInt(value, 10);
-      const valIsInt = Number.isInteger(intVal);
-
-      if (value === defaultVal) {
-        return value;
-      } else if (valIsInt) {
-        return intVal;
-      }
+      if (value === defaultVal) return value;
+      const num = parseFloat(value);
+      if (!isNaN(num)) return num;
     },
 
     /**

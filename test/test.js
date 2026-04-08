@@ -255,6 +255,18 @@ test('returns integers', (t) => {
   t.end();
 });
 
+test('returns floats', (t) => {
+  let result = env.getNumber('FLOAT_NUM');
+  t.equals(result, 3.14);
+  result = null;
+  result = env.num('FLOAT_NUM');
+  t.equals(result, 3.14);
+  result = null;
+  result = env.num(['INTT', 'FLOAT_NUM']);
+  t.equals(result, 3.14);
+  t.end();
+});
+
 test('returns undefined for non-exequalsting number', (t) => {
   const result = env.getNumber('INT_NOT_HERE');
   t.equals(undefined, result);
