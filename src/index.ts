@@ -281,14 +281,9 @@ const env = {
 
   getNumber (key: string | string[], defaultVal?: number): number | undefined {
     const value = this.get(key, defaultVal);
-    const intVal = parseInt(value as string, 10);
-    const valIsInt = Number.isInteger(intVal);
-
-    if (value === defaultVal) {
-      return value as number | undefined;
-    } else if (valIsInt) {
-      return intVal;
-    }
+    if (value === defaultVal) return value as number | undefined;
+    const num = parseFloat(value as string);
+    if (!isNaN(num)) return num;
   },
 
   num (key: string | string[], defaultVal?: number): number | undefined {
