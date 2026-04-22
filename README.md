@@ -72,6 +72,18 @@ env.list('ALLOWED_ORIGINS');        // Shorthand for getList()
 
 // Get a numeric list
 env.list('VALUES', { cast: 'number' }); // [1, 2, 3] (converts from '1,2,3')
+
+// Get a duration in milliseconds
+// CACHE_TTL=5m
+env.getDuration('CACHE_TTL');              // 300000
+env.duration('CACHE_TTL');                 // Shorthand for getDuration()
+
+// With a default — strings are parsed, numbers are treated as ms
+env.getDuration('CACHE_TTL', '30s');       // 30000 if CACHE_TTL is not set
+env.getDuration('CACHE_TTL', 1000);        // 1000 if CACHE_TTL is not set
+
+// Supported units: ms, s, m, h, d, w (case-insensitive, decimals allowed)
+// Returns null if the value and default are both unparseable.
 ```
 
 #### URLs and IPs
