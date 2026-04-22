@@ -325,6 +325,50 @@ test('duration() is an alias for getDuration()', (t) => {
   t.end();
 });
 
+test('getDate parses ISO datetime and date-only strings', (t) => {
+  const dt = env.getDate('VALID_ISO_DATETIME');
+  t.ok(dt instanceof Date);
+  t.equals(dt.toISOString(), '2024-01-15T10:30:00.000Z');
+  const d = env.getDate('VALID_ISO_DATE');
+  t.ok(d instanceof Date);
+  t.equals(d.toISOString(), '2024-01-15T00:00:00.000Z');
+  t.end();
+});
+
+test('getDate returns null for invalid env values', (t) => {
+  t.equals(env.getDate('INVALID_DATE'), null);
+  t.end();
+});
+
+test('getDate falls back to default on invalid env value', (t) => {
+  const d = env.getDate('INVALID_DATE', '2024-06-01');
+  t.equals(d.toISOString(), '2024-06-01T00:00:00.000Z');
+  t.end();
+});
+
+test('getDate resolves defaults for missing keys', (t) => {
+  t.equals(env.getDate('DATE_NOPE'), null);
+  const d1 = env.getDate('DATE_NOPE', '2024-06-01');
+  t.equals(d1.toISOString(), '2024-06-01T00:00:00.000Z');
+  const now = new Date();
+  t.equals(env.getDate('DATE_NOPE', now), now);
+  t.end();
+});
+
+test('getDate returns null for unparseable defaults', (t) => {
+  t.equals(env.getDate('DATE_NOPE', 'garbage'), null);
+  t.equals(env.getDate('DATE_NOPE', new Date('nope')), null);
+  t.equals(env.getDate('DATE_NOPE', 12345), null);
+  t.equals(env.getDate('DATE_NOPE', {}), null);
+  t.end();
+});
+
+test('date() is an alias for getDate()', (t) => {
+  const d = env.date('VALID_ISO_DATE');
+  t.equals(d.toISOString(), '2024-01-15T00:00:00.000Z');
+  t.end();
+});
+
 test('returns a list of values', (t) => {
   let result = env.getList('MY_LIST');
   t.equals(result.length, 3);

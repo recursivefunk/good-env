@@ -28,6 +28,14 @@ const parseDuration = input => {
   if (!match) return null;
   return parseFloat(match[1]) * DURATION_UNITS[match[2].toLowerCase()];
 };
+const parseDate = input => {
+  if (input instanceof Date) {
+    return Number.isFinite(input.getTime()) ? input : null;
+  }
+  if (!isString(input)) return null;
+  const d = new Date(input.trim());
+  return Number.isFinite(d.getTime()) ? d : null;
+};
 const store = { ...process.env };
 
 module.exports = Object
@@ -381,6 +389,33 @@ module.exports = Object
      */
     duration (key, defaultVal) {
       return this.getDuration(key, defaultVal);
+    },
+
+    /**
+     * @description Fetches the value at the given key and parses it into
+     * a Date. Follows JavaScript's Date constructor rules (ISO 8601 is
+     * recommended; strings without a timezone fall back to local time).
+     * Accepts string values or Date instances as the default. Returns
+     * null if the env value is invalid and the default doesn't resolve.
+     *
+     * @param {string} key - A unique key
+     * @param {(string|Date)} defaultVal - A date string or Date instance
+     *
+     */
+    getDate (key, defaultVal) {
+      const parsed = parseDate(this.get(key));
+      if (parsed !== null) return parsed;
+      const parsedDefault = parseDate(defaultVal);
+      if (parsedDefault !== null) return parsedDefault;
+      return null;
+    },
+
+    /**
+     * @description An alias function for getDate()
+     *
+     */
+    date (key, defaultVal) {
+      return this.getDate(key, defaultVal);
     },
 
     /**

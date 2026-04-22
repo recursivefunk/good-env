@@ -84,6 +84,18 @@ env.getDuration('CACHE_TTL', 1000);        // 1000 if CACHE_TTL is not set
 
 // Supported units: ms, s, m, h, d, w (case-insensitive, decimals allowed)
 // Returns null if the value and default are both unparseable.
+
+// Get a Date
+// RELEASE_AT=2024-01-15T10:30:00Z
+env.getDate('RELEASE_AT');                 // Date object
+env.date('RELEASE_AT');                    // Shorthand for getDate()
+
+// Defaults may be ISO strings or Date instances
+env.getDate('RELEASE_AT', '2024-01-01');   // Parsed if RELEASE_AT is not set
+env.getDate('RELEASE_AT', new Date());     // Returned as-is if RELEASE_AT is not set
+
+// Follows JavaScript Date parsing rules — prefer ISO 8601 with a timezone.
+// Returns null if neither the value nor the default is a valid date.
 ```
 
 #### URLs and IPs
