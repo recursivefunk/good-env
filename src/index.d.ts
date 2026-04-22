@@ -144,6 +144,23 @@ declare module "good-env" {
    */
   export const duration: (key: string, defaultVal?: string | number) => number | null;
   /**
+   * @description Fetches the value at the given key and parses it into a
+   * Date. Follows JavaScript's Date constructor rules (ISO 8601 is
+   * recommended; strings without a timezone fall back to local time).
+   * Accepts string values or Date instances as the default. Returns null
+   * if the env value is invalid and the default doesn't resolve.
+   *
+   * @param {string} key - A unique key
+   * @param {(string|Date)} defaultVal - A date string or Date instance
+   *
+   */
+  export const getDate: (key: string, defaultVal?: string | Date) => Date | null;
+  /**
+   * @description An alias function for getDate()
+   *
+   */
+  export const date: (key: string, defaultVal?: string | Date) => Date | null;
+  /**
    * @description Fetches the value at the given key and attempts to
    * coherse it into a list of literal values
    *
