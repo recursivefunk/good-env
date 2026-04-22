@@ -47,6 +47,26 @@ test('it uses secrets manager (happy path)', async (t) => {
   t.end();
 });
 
+test('use() defaults region to us-east-1 when AWS_REGION is unset', async (t) => {
+  let capturedRegion;
+  class SpyClient {
+    constructor ({ region }) { capturedRegion = region; }
+    send () {
+      return Promise.resolve({ SecretString: JSON.stringify({ spyVal: 'x' }) });
+    }
+  }
+  const awsSecretsManager = { SecretsManagerClient: SpyClient, GetSecretValueCommand };
+  const saved = process.env.AWS_REGION;
+  delete process.env.AWS_REGION;
+  try {
+    await env.use(awsSecretsManager, 'my-secret');
+    t.equals(capturedRegion, 'us-east-1');
+  } finally {
+    process.env.AWS_REGION = saved;
+  }
+  t.end();
+});
+
 test('it gets an IP address', (t) => {
   const ip = env.getIP('VALID_IP');
   t.equals(ip, '192.168.1.60');
