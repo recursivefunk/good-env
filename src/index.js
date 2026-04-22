@@ -10,8 +10,7 @@ const isNumber = x => is(x) === '[object Number]';
 const isBoolean = x => is(x) === '[object Boolean]';
 const isObject = x => is(x) === '[object Object]';
 const isFunction = x => is(x) === '[object Function]';
-const parse = (items, converter) => items.map(t => converter(t, 10));
-const mapNums = items => parse(items, parseInt);
+const mapNums = items => items.map(t => parseFloat(t));
 const validType = item => ['number', 'boolean', 'string'].includes(item);
 const store = { ...process.env };
 
@@ -110,11 +109,7 @@ module.exports = Object
      * @returns {object}
      */
     getUrl (key, defaultVal) {
-      let urlStr = this.get(key, defaultVal);
-
-      if (urlStr === defaultVal) {
-        urlStr = defaultVal;
-      }
+      const urlStr = this.get(key, defaultVal);
 
       try {
         return makeGoodUrl({ url: new URL(urlStr) });
@@ -161,7 +156,7 @@ module.exports = Object
         return false;
       });
 
-      if (!ok(value) && typeof ok(defaultVal)) {
+      if (!ok(value) && ok(defaultVal)) {
         value = defaultVal;
       }
 
@@ -185,7 +180,7 @@ module.exports = Object
         }, {})
       );
 
-      const arrMapper = (keys, getter) => items.map(key => getter(key));
+      const arrMapper = (keys, getter) => keys.map(key => getter(key));
 
       if (isArray(items)) {
         return arrMapper(items, this.get);
