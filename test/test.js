@@ -279,6 +279,52 @@ test('returns undefined for exequalsting non-number', (t) => {
   t.end();
 });
 
+test('getDuration parses every supported unit', (t) => {
+  t.equals(env.getDuration('DURATION_MS'), 500);
+  t.equals(env.getDuration('DURATION_S'), 30 * 1000);
+  t.equals(env.getDuration('DURATION_M'), 5 * 60 * 1000);
+  t.equals(env.getDuration('DURATION_H'), 2 * 60 * 60 * 1000);
+  t.equals(env.getDuration('DURATION_D'), 24 * 60 * 60 * 1000);
+  t.equals(env.getDuration('DURATION_W'), 7 * 24 * 60 * 60 * 1000);
+  t.end();
+});
+
+test('getDuration parses decimals, is case-insensitive, allows whitespace', (t) => {
+  t.equals(env.getDuration('DURATION_FLOAT'), 1.5 * 60 * 60 * 1000);
+  t.equals(env.getDuration('DURATION_UPPER'), 10 * 1000);
+  t.equals(env.getDuration('DURATION_SPACED'), 5 * 60 * 1000);
+  t.end();
+});
+
+test('getDuration returns null for invalid env values', (t) => {
+  t.equals(env.getDuration('DURATION_INVALID'), null);
+  t.end();
+});
+
+test('getDuration falls back to default when env value is invalid', (t) => {
+  t.equals(env.getDuration('DURATION_INVALID', '2s'), 2000);
+  t.end();
+});
+
+test('getDuration resolves defaults for missing keys', (t) => {
+  t.equals(env.getDuration('DURATION_NOPE'), null);
+  t.equals(env.getDuration('DURATION_NOPE', '1m'), 60 * 1000);
+  t.equals(env.getDuration('DURATION_NOPE', 1234), 1234);
+  t.end();
+});
+
+test('getDuration returns null for unparseable defaults', (t) => {
+  t.equals(env.getDuration('DURATION_NOPE', 'garbage'), null);
+  t.equals(env.getDuration('DURATION_NOPE', NaN), null);
+  t.equals(env.getDuration('DURATION_NOPE', {}), null);
+  t.end();
+});
+
+test('duration() is an alias for getDuration()', (t) => {
+  t.equals(env.duration('DURATION_M'), 5 * 60 * 1000);
+  t.end();
+});
+
 test('returns a list of values', (t) => {
   let result = env.getList('MY_LIST');
   t.equals(result.length, 3);

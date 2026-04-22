@@ -12,6 +12,22 @@ const isObject = x => is(x) === '[object Object]';
 const isFunction = x => is(x) === '[object Function]';
 const mapNums = items => items.map(t => parseFloat(t));
 const validType = item => ['number', 'boolean', 'string'].includes(item);
+const DURATION_UNITS = {
+  ms: 1,
+  s: 1000,
+  m: 60 * 1000,
+  h: 60 * 60 * 1000,
+  d: 24 * 60 * 60 * 1000,
+  w: 7 * 24 * 60 * 60 * 1000
+};
+const DURATION_RE = /^(\d+(?:\.\d+)?)\s*(ms|s|m|h|d|w)$/i;
+const parseDuration = input => {
+  if (isNumber(input)) return Number.isFinite(input) ? input : null;
+  if (!isString(input)) return null;
+  const match = input.trim().match(DURATION_RE);
+  if (!match) return null;
+  return parseFloat(match[1]) * DURATION_UNITS[match[2].toLowerCase()];
+};
 const store = { ...process.env };
 
 module.exports = Object
@@ -337,6 +353,34 @@ module.exports = Object
      */
     num (key, defaultVal) {
       return this.getNumber(key, defaultVal);
+    },
+
+    /**
+     * @description Fetches the value at the given key and parses it as a
+     * duration string (e.g. "500ms", "30s", "5m", "2h", "1d", "1w") into
+     * milliseconds. The unit is case-insensitive and whitespace between
+     * the number and unit is allowed. If the env value is invalid, the
+     * default is parsed instead. Numeric defaults are treated as
+     * milliseconds. Returns null if nothing can be resolved.
+     *
+     * @param {string} key - A unique key
+     * @param {(string|number)} defaultVal - A duration string or a number of ms
+     *
+     */
+    getDuration (key, defaultVal) {
+      const parsed = parseDuration(this.get(key));
+      if (parsed !== null) return parsed;
+      const parsedDefault = parseDuration(defaultVal);
+      if (parsedDefault !== null) return parsedDefault;
+      return null;
+    },
+
+    /**
+     * @description An alias function for getDuration()
+     *
+     */
+    duration (key, defaultVal) {
+      return this.getDuration(key, defaultVal);
     },
 
     /**

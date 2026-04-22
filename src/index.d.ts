@@ -126,6 +126,24 @@ declare module "good-env" {
    */
   export const num: (key: any, defaultVal?: any) => any;
   /**
+   * @description Fetches the value at the given key and parses it as a
+   * duration string (e.g. "500ms", "30s", "5m", "2h", "1d", "1w") into
+   * milliseconds. The unit is case-insensitive and whitespace between the
+   * number and unit is allowed. If the env value is invalid, the default
+   * is parsed instead. Numeric defaults are treated as milliseconds.
+   * Returns null if nothing can be resolved.
+   *
+   * @param {string} key - A unique key
+   * @param {(string|number)} defaultVal - A duration string or number of ms
+   *
+   */
+  export const getDuration: (key: string, defaultVal?: string | number) => number | null;
+  /**
+   * @description An alias function for getDuration()
+   *
+   */
+  export const duration: (key: string, defaultVal?: string | number) => number | null;
+  /**
    * @description Fetches the value at the given key and attempts to
    * coherse it into a list of literal values
    *
